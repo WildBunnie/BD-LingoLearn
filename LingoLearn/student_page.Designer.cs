@@ -55,6 +55,7 @@ namespace LingoLearn
             this.answer_quizes_button.TabIndex = 6;
             this.answer_quizes_button.Text = "Answer Quizzes";
             this.answer_quizes_button.UseVisualStyleBackColor = true;
+            this.answer_quizes_button.Click += new System.EventHandler(this.answer_quizes_button_Click);
             // 
             // look_for_teacher_button
             // 
