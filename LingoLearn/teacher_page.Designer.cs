@@ -55,6 +55,7 @@ namespace LingoLearn
             this.add_quizzes_button.TabIndex = 6;
             this.add_quizzes_button.Text = "Add Quizzes";
             this.add_quizzes_button.UseVisualStyleBackColor = true;
+            this.add_quizzes_button.Click += new System.EventHandler(this.add_quizzes_button_Click);
             // 
             // students_button
             // 

@@ -32,7 +32,14 @@ namespace LingoLearn
             frm.Location = this.Location;
             frm.StartPosition = FormStartPosition.Manual;
             frm.Show();
-            this.Hide();
+            this.Close();
+        }
+
+        private void add_quizzes_button_Click(object sender, EventArgs e)
+        {
+            var add_quizzes = new add_quizes();
+            add_quizzes.Show();
+            this.Close();
         }
     }
 }

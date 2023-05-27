@@ -120,7 +120,9 @@ VALUES
 -- id, type, question_text, language_id(design, code), quiz_id
 ('Escolha Múltipla', 'Uma das seguintes opções não pertence à conjugação do verbo "Saber", selecione a opção errada', 'Português', 1, 1),
 ('Tradução', 'Traduza para Português a seguinte frase "I don''t know"', 'Português', 1, 2),
-('Escolha Múltipla', 'Escolha a conjugação correta do verbo "Poder"', 'Português', 1, 4);
+('Escolha Múltipla', 'Escolha a conjugação correta do verbo "Poder"', 'Português', 1, 4),
+('Escolha Múltipla', 'Escolha a conjugação correta do verbo "Cair"', 'Português', 1, 4),
+('Escolha Múltipla', 'Escolha a conjugação correta do verbo "Saber"', 'Português', 1, 3);
 
 
 INSERT INTO ANSWER
