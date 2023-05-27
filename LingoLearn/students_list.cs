@@ -34,7 +34,7 @@ namespace LingoLearn
             SqlConnection cn = homepage.cn;
             try
             {
-                String query = String.Format("SELECT username " +
+                String query = String.Format("SELECT username, designation " +
                                                 "FROM \"USER\" JOIN TEACHES_STUDENTS ON id = learner_id " +
                                                 "WHERE teacher_id = " + login.id.ToString());
 
@@ -49,6 +49,8 @@ namespace LingoLearn
                             {
                                 Student s = new Student();
                                 s.name = reader["username"].ToString();
+                                s.language = reader["designation"].ToString();
+
                                 list.Add(s);
                             }
                         }
@@ -68,6 +70,13 @@ namespace LingoLearn
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
             dataGridView1.ClearSelection();
+        }
+
+        private void add_quizzes_button_Click(object sender, EventArgs e)
+        {
+            var add_quizzes = new add_quizes();
+            add_quizzes.Show();
+            this.Close();
         }
     }
     public class Student
