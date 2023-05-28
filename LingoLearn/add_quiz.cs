@@ -50,6 +50,7 @@ namespace LingoLearn
 
                 a.score = 100;
                 a.answer_text = answer_text.Text;
+                a.answer_type = "trad";
 
                 answers.Add(a);
 
@@ -82,6 +83,7 @@ namespace LingoLearn
                 else
                     a.score = 0;
                 a.answer_text = multi_text_1.Text;
+                a.answer_type = "multi";
                 answers.Add(a);
 
                 a = new Answer();
@@ -90,6 +92,7 @@ namespace LingoLearn
                 else
                     a.score = 0;
                 a.answer_text = multi_text_2.Text;
+                a.answer_type = "multi";
                 answers.Add(a);
 
                 a = new Answer();
@@ -98,6 +101,7 @@ namespace LingoLearn
                 else
                     a.score = 0;
                 a.answer_text = multi_text_3.Text;
+                a.answer_type = "multi";
                 answers.Add(a);
 
                 a = new Answer();
@@ -106,6 +110,7 @@ namespace LingoLearn
                 else
                     a.score = 0;
                 a.answer_text = multi_text_4.Text;
+                a.answer_type = "multi";
                 answers.Add(a);
 
 
@@ -134,6 +139,7 @@ namespace LingoLearn
 
                     a.score = 100;
                     a.answer_text = answer_text.Text;
+                    a.answer_type = "trad";
 
                     answers.Add(a);
                     cleanUP();
@@ -168,6 +174,7 @@ namespace LingoLearn
                     else
                         a.score = 0;
                     a.answer_text = multi_text_1.Text;
+                    a.answer_type = "multi";
                     answers.Add(a);
 
                     a = new Answer();
@@ -176,6 +183,7 @@ namespace LingoLearn
                     else
                         a.score = 0;
                     a.answer_text = multi_text_2.Text;
+                    a.answer_type = "multi";
                     answers.Add(a);
 
                     a = new Answer();
@@ -184,6 +192,7 @@ namespace LingoLearn
                     else
                         a.score = 0;
                     a.answer_text = multi_text_3.Text;
+                    a.answer_type = "multi";
                     answers.Add(a);
 
                     a = new Answer();
@@ -192,6 +201,7 @@ namespace LingoLearn
                     else
                         a.score = 0;
                     a.answer_text = multi_text_4.Text;
+                    a.answer_type = "multi";
                     answers.Add(a);
                 }
                 cleanUP();
@@ -233,8 +243,14 @@ namespace LingoLearn
 
                 // Answer Part
                 int count = 0;
+                int currentQ = 0;
                 foreach (Answer answer in answers)
                 {
+                    if (currentQ == 4)
+                    {
+                        currentQ = 0;
+                        count++;
+                    }
                     using (SqlCommand cmd = new SqlCommand("addAnswer", cn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
@@ -244,17 +260,15 @@ namespace LingoLearn
                         cmd.Parameters.Add("@question_id", SqlDbType.Int).Value = this.questions_id[count];
                         cmd.ExecuteNonQuery();
                     }
-                    try
+                    if (answer.answer_type.Equals("trad"))
+                        count++;
+                    else
                     {
-
-                        Console.Write(this.questions_id[count + 1]);
-                        if (this.questions_id[count] != this.questions_id[count++])
-                            count++;
+                        currentQ++;
                     }
-                    catch
-                    {
 
-                    }
+
+                        
                     
                 }
             }
@@ -311,6 +325,7 @@ namespace LingoLearn
         {
             public int score { get; set; }
             public String answer_text { get; set; }
+            public String answer_type { get; set; }
         }
 
         private void translation_radio_CheckedChanged(object sender, EventArgs e)
