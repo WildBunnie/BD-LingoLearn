@@ -14,7 +14,8 @@ namespace LingoLearn
     public partial class quizes_to_answer : Form
     {
 
-        List<Quiz> list = new List<Quiz>();
+        List<Quiz> quizlist = new List<Quiz>();
+        List<Question> questionlist = new List<Question>();
         public quizes_to_answer()
         {
             InitializeComponent();
@@ -23,7 +24,8 @@ namespace LingoLearn
         private void students_list_Load(object sender, EventArgs e)
         {
             loadQuizes();
-            dataGridView1.DataSource = list;
+            dataGridView1.DataSource = quizlist;
+            dataGridView1.Columns["NumberQuestions"].Visible = false;
             foreach (DataGridViewColumn column in dataGridView1.Columns)
             {
                 column.SortMode = DataGridViewColumnSortMode.NotSortable;
@@ -39,6 +41,7 @@ namespace LingoLearn
                 using (SqlCommand cmd = new SqlCommand("getQuizes", cn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
+                    //cmd.Parameters.Add("@user_id", SqlDbType.Int).Value = login.id;
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
@@ -48,6 +51,7 @@ namespace LingoLearn
                             {
                                 Quiz q = new Quiz();
 
+                                q.ID = Convert.ToInt32(reader["id"]);
                                 q.Answered = "False";
 
                                 q.Type = reader["type"].ToString();
@@ -63,8 +67,25 @@ namespace LingoLearn
                                 {
                                     q.Answered = "True";
                                 }
-                                
-                                list.Add(q);
+
+                                Boolean found = false;
+                                int index = -1;
+                                for(int i = 0; i < quizlist.Count; i++)
+                                {
+                                    Quiz quiz = quizlist[i];
+                                    if(quiz.ID == q.ID)
+                                    {
+                                        found = true;
+                                        index = i;
+                                    }
+                                }
+                                if(!found)
+                                    quizlist.Add(q);
+                                else if(found && quizlist[index].Answered.Equals("False") && q.Answered.Equals("True"))
+                                {
+                                    quizlist.RemoveAt(index);
+                                    quizlist.Insert(index, q);
+                                }
                             }
                         }
                     }
@@ -84,27 +105,105 @@ namespace LingoLearn
         {
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
-                if (row.Selected ==true && this.dataGridView1.SelectedRows.Count == 1)
+                if (row.Selected == true && this.dataGridView1.SelectedRows.Count == 1)
                 {
-                    // get information of 1st column from the row
-                    String index = row.Index.ToString();
+                    int index = row.Index;
+                    SqlConnection cn = homepage.cn;
+                    if (dataGridView1.Rows[index].Cells[2].Value.ToString().Equals("True"))
+                    {
+                        using (SqlCommand cmd = new SqlCommand("getScore", cn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
 
-                    var frm = new student_page();
-                    frm.Location = this.Location;
-                    frm.StartPosition = FormStartPosition.Manual;
-                    frm.Show();
-                    this.Close();
-                    return;
+                            cmd.Parameters.Add("@user_id", SqlDbType.Int).Value = login.id;
+                            cmd.Parameters.Add("@quiz_id", SqlDbType.Int).Value = Convert.ToInt32(dataGridView1.Rows[index].Cells[0].Value);
+
+                            cmd.Parameters.Add("@score", SqlDbType.Int).Direction = ParameterDirection.Output;
+
+                            cn.Open();
+                            cmd.ExecuteNonQuery();
+                            cn.Close();
+                            int score = 0;
+                            if(cmd.Parameters["@score"].Value != DBNull.Value)
+                                score = Convert.ToInt32(cmd.Parameters["@score"].Value);
+                            MessageBox.Show("Your score on this quiz is " + score.ToString(), "Score", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+                    else
+                    {
+                        using (SqlCommand cmd = new SqlCommand("getQuestions", cn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.Add("@quiz_id", SqlDbType.Int).Value = Convert.ToInt32(dataGridView1.Rows[index].Cells[0].Value);
+                            int previous = -1, current;
+                            Question q = null;
+                            cn.Open();
+                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    while (reader.Read())
+                                    {   
+                                        current = Convert.ToInt32(reader["question_id"]);
+                                        if(current != previous)
+                                        {
+                                            if(q != null)
+                                            {
+                                                questionlist.Add(q);
+                                            }
+                                            q = new Question();
+                                            q.answers = new List<Answer>();
+                                        }
+                                        q.quiz_id = Convert.ToInt32(reader["quiz_id"]);
+                                        q.question_id = Convert.ToInt32(reader["question_id"]);
+                                        q.text = reader["question_text"].ToString();
+                                        Answer a = new Answer();
+                                        a.text = reader["answer"].ToString();
+                                        a.score = Convert.ToInt32(reader["score"]);
+                                        q.answers.Add(a);
+                                        q.type = reader["type"].ToString();
+                                        q.language = reader["designation"].ToString();
+                                        previous = current;
+                                    }
+                                    questionlist.Add(q);
+                                }
+                            }
+                        }
+                        cn.Close();
+                        var frm = new answer_quiz(questionlist);
+                        frm.Location = this.Location;
+                        frm.StartPosition = FormStartPosition.Manual;
+                        frm.Show();
+                        this.Hide();
+                    }
                 }
             }
         }
     }
 
+    public class Question
+    {
+        public int quiz_id { get; set; }
+        public int question_id { get; set; }
+        public String text { get; set; }
+        public List<Answer> answers { get; set; }
+        public String type { get; set; }
+        public String language { get; set; }
+    }
+
+    public class Answer
+    {
+        public String text { get; set; }
+        public int score { get; set; }
+    }
+
     public class Quiz
     {
+        public int ID { get; set; }
         public String Type { get; set; }
         public String Answered { get; set; }
         public String Language { get; set; }
         public String Creator { get; set; }
+        public String NumberQuestions { get; set; }
     }
 }

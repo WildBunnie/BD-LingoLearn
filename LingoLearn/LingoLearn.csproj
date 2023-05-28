@@ -46,13 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
+    <Compile Include="answer_quiz.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="answer_quiz.Designer.cs">
+      <DependentUpon>answer_quiz.cs</DependentUpon>
+    </Compile>
     <Compile Include="quizes_to_answer.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="quizes_to_answer.Designer.cs">
       <DependentUpon>quizes_to_answer.cs</DependentUpon>
-=======
+    </Compile>
     <Compile Include="add_quiz.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -64,7 +69,6 @@
     </Compile>
     <Compile Include="add_quizzes_page.Designer.cs">
       <DependentUpon>add_quizzes_page.cs</DependentUpon>
->>>>>>> 039279a3ed7b772d3418cd823cac70976ff8ddf0
     </Compile>
     <Compile Include="students_list.cs">
       <SubType>Form</SubType>
@@ -113,16 +117,17 @@
     <EmbeddedResource Include="add_quiz.resx">
       <DependentUpon>add_quiz.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="answer_quiz.resx">
+      <DependentUpon>answer_quiz.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="homepage.resx">
       <DependentUpon>homepage.cs</DependentUpon>
     </EmbeddedResource>
-<<<<<<< HEAD
     <EmbeddedResource Include="quizes_to_answer.resx">
       <DependentUpon>quizes_to_answer.cs</DependentUpon>
-=======
+    </EmbeddedResource>
     <EmbeddedResource Include="add_quizzes_page.resx">
       <DependentUpon>add_quizzes_page.cs</DependentUpon>
->>>>>>> 039279a3ed7b772d3418cd823cac70976ff8ddf0
     </EmbeddedResource>
     <EmbeddedResource Include="students_list.resx">
       <DependentUpon>students_list.cs</DependentUpon>

@@ -3,6 +3,6 @@ USE [LingoLearn]
 GO
 CREATE PROC getQuizes
 AS
-	SELECT user_id, type, TEACHER.teacher_name, designation
+	SELECT QUIZ.id, user_id, type, TEACHER.teacher_name, designation
 		FROM (QUIZES_ANSWERED RIGHT OUTER JOIN QUIZ ON QUIZ.id = QUIZES_ANSWERED.quiz_id) LEFT OUTER JOIN TEACHER ON TEACHER.id = creator_id
 GO

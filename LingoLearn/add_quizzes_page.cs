@@ -32,7 +32,9 @@ namespace LingoLearn
         {
             quiz_load();
             dataGridView1.DataSource = list;
-            
+            dataGridView1.Columns["Answered"].Visible = false;
+            dataGridView1.Columns["Creator"].Visible = false;
+
             foreach (DataGridViewColumn column in dataGridView1.Columns)
             {
                 column.SortMode = DataGridViewColumnSortMode.NotSortable;
@@ -63,9 +65,9 @@ namespace LingoLearn
                             while (reader.Read())
                             {
                                 Quiz q = new Quiz();
-                                q.type = reader["type"].ToString();
-                                q.numberQuestions = reader["n_questions"].ToString();
-                                q.language = reader["designation"].ToString();
+                                q.Type = reader["type"].ToString();
+                                q.NumberQuestions = reader["n_questions"].ToString();
+                                q.Language = reader["designation"].ToString();
 
                                 list.Add(q);
                             }
@@ -191,11 +193,5 @@ namespace LingoLearn
         }
         
     }
-    public class Quiz
-    {
-        public String type { get; set; }
-        public String numberQuestions { get; set; }
-        public String language { get; set; }
-    }
-    
+
 }
