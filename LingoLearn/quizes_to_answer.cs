@@ -131,46 +131,48 @@ namespace LingoLearn
                     }
                     else
                     {
+                        int quiz_id = Convert.ToInt32(dataGridView1.Rows[index].Cells[0].Value);
                         using (SqlCommand cmd = new SqlCommand("getQuestions", cn))
                         {
                             cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.Add("@quiz_id", SqlDbType.Int).Value = Convert.ToInt32(dataGridView1.Rows[index].Cells[0].Value);
-                            int previous = -1, current;
-                            Question q = null;
+                            cmd.Parameters.Add("@quiz_id", SqlDbType.Int).Value = quiz_id;
                             cn.Open();
                             using (SqlDataReader reader = cmd.ExecuteReader())
                             {
                                 if (reader.HasRows)
                                 {
                                     while (reader.Read())
-                                    {   
-                                        current = Convert.ToInt32(reader["question_id"]);
-                                        if(current != previous)
-                                        {
-                                            if(q != null)
-                                            {
-                                                questionlist.Add(q);
-                                            }
-                                            q = new Question();
-                                            q.answers = new List<Answer>();
-                                        }
-                                        q.quiz_id = Convert.ToInt32(reader["quiz_id"]);
-                                        q.question_id = Convert.ToInt32(reader["question_id"]);
-                                        q.text = reader["question_text"].ToString();
+                                    {
+
                                         Answer a = new Answer();
                                         a.text = reader["answer"].ToString();
                                         a.score = Convert.ToInt32(reader["score"]);
+
+                                        Question q = null;
+                                        int question_id = Convert.ToInt32(reader["question_id"]);
+                                        int q_index = getQuestion(question_id);
+                                        if (q_index == -1)
+                                        {
+                                            q = new Question();
+                                            q.question_id = question_id;
+                                            q.quiz_id = Convert.ToInt32(reader["quiz_id"]);
+                                            q.question_id = Convert.ToInt32(reader["question_id"]);
+                                            q.text = reader["question_text"].ToString();
+                                            q.type = reader["type"].ToString();
+                                            q.language = reader["designation"].ToString();
+                                            q.answers = new List<Answer>();
+                                            questionlist.Add(q);
+                                        }
+                                        else
+                                        {
+                                            q = questionlist[q_index];
+                                        }
                                         q.answers.Add(a);
-                                        q.type = reader["type"].ToString();
-                                        q.language = reader["designation"].ToString();
-                                        previous = current;
                                     }
-                                    questionlist.Add(q);
                                 }
-                            }
+                            } cn.Close();
                         }
-                        cn.Close();
-                        var frm = new answer_quiz(questionlist);
+                        var frm = new answer_quiz(questionlist, quiz_id);
                         frm.Location = this.Location;
                         frm.StartPosition = FormStartPosition.Manual;
                         frm.Show();
@@ -178,6 +180,17 @@ namespace LingoLearn
                     }
                 }
             }
+        }
+        private int getQuestion(int question_id)
+        {
+            int res = -1;
+            for (int i = 0; i < questionlist.Count; i++)
+            {
+                Question q = questionlist[i];
+                if (q.question_id == question_id)
+                    res = i;
+            }   
+            return res;
         }
     }
 
