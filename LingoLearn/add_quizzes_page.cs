@@ -101,14 +101,16 @@ namespace LingoLearn
         {
             if (verbs == true)
             {
-                addQuiz("Verbs");
+                var add_quiz = new add_quiz("Verbos", quiz_id, dropdown.SelectedItem.ToString());
+                add_quiz.Show();
             }
             else if (grammar == true)
             {
-                addQuiz("Grammar");
+                var add_quiz = new add_quiz("Gramática", quiz_id, dropdown.SelectedItem.ToString());
+                add_quiz.Show();
             }
-            var add_quiz = new add_quiz(quiz_id, dropdown.SelectedItem.ToString());
-            add_quiz.Show();
+            
+            
             this.Close();
         }
 
@@ -156,42 +158,7 @@ namespace LingoLearn
                     cn.Close();
                 }
             }
-        }
-        
-        public void addQuiz(String quizType)
-        {
-            SqlConnection cn = homepage.cn;
-
-            try
-            {
-                cn.Open();
-                using (SqlCommand cmd = new SqlCommand("addQuiz", cn))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.Add("@creator_id", SqlDbType.Int).Value = login.id;
-                    cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = dropdown.SelectedItem.ToString();
-                    cmd.Parameters.Add("@quizType", SqlDbType.VarChar, 20).Value = quizType;
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            this.quiz_id = int.Parse(reader["id"].ToString());
-                        }
-                    }
-                }
-                cn.Close();
-            }
-            finally
-            {
-                if (cn.State != ConnectionState.Closed)
-                {
-                    cn.Close();
-                }
-            }
-        }
-        
+        }        
     }
 
 }
