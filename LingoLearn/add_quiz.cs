@@ -62,9 +62,7 @@ namespace LingoLearn
 
                     addQuestions();
                     // load add_quizzes again
-                    var show_quizzes = new add_quizes();
-                    show_quizzes.Show();
-                    this.Close();
+                    utils.loadForm(this, new add_quizes());
                 }
             }
             else
@@ -134,9 +132,7 @@ namespace LingoLearn
 
                     addQuestions();
                     // load add_quizzes again
-                    var show_quizzes = new add_quizes();
-                    show_quizzes.Show();
-                    this.Close();
+                    utils.loadForm(this, new add_quizes());
                 }
                 
             }

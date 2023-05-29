@@ -211,9 +211,7 @@ namespace LingoLearn
         {
             deleteUser();
             MessageBox.Show("User deleted successfully", "User deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            var homepage = new startpage();
-            homepage.Show();
-            this.Close();
+            utils.loadForm(this, new startpage());
         }
 
         private void cancel_deletion_button_Click(object sender, EventArgs e)

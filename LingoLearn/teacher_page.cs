@@ -43,13 +43,7 @@ namespace LingoLearn
 
         private void settings_button_Click(object sender, EventArgs e)
         {
-<<<<<<< HEAD
-            var settings = new settings_teacher();
-            settings.Show();
-            this.Close();
-=======
-            utils.loadForm(this, new settings());
->>>>>>> 914afba4a26cd1b19720eac794abac07446229cf
+            utils.loadForm(this, new settings_teacher());
         }
     }
 }
