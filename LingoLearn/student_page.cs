@@ -14,8 +14,6 @@ namespace LingoLearn
     public partial class student_page : Form
     {
 
-        //SqlConnection cn;
-
         public student_page()
         {
             InitializeComponent();
@@ -28,11 +26,7 @@ namespace LingoLearn
 
         private void answer_quizes_button_Click(object sender, EventArgs e)
         {
-            var frm = new quizes_to_answer();
-            frm.Location = this.Location;
-            frm.StartPosition = FormStartPosition.Manual;
-            frm.Show();
-            this.Close();
+            utils.loadForm(this, new quizes_to_answer());
         }
 
         private void look_for_teacher_button_Click(object sender, EventArgs e)
@@ -42,11 +36,12 @@ namespace LingoLearn
 
         private void leaderboards_button_Click(object sender, EventArgs e)
         {
-            var frm = new leaderboards();
-            frm.Location = this.Location;
-            frm.StartPosition = FormStartPosition.Manual;
-            frm.Show();
-            this.Close();
+            utils.loadForm(this, new leaderboards());
+        }
+
+        private void settings_button_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -17,6 +17,7 @@ namespace LingoLearn
         public static String username;
         public static String email;
         public static int id;
+        // 1 = student, 2 = teacher
         public static int role;
 
         public login()
@@ -34,7 +35,7 @@ namespace LingoLearn
             {
                 errorMessage = "All fields must be filled";
             }
-            else if (!IsValidEmail(email))
+            else if (!utils.IsValidEmail(email))
             {
                 errorMessage = "Invalid Email";
             }
@@ -52,7 +53,7 @@ namespace LingoLearn
 
         private void user_login(String email, String password)
         {
-            SqlConnection cn = homepage.cn;
+            SqlConnection cn = startpage.cn;
             using (SqlCommand cmd = new SqlCommand("userFromCredentials", cn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -62,6 +63,7 @@ namespace LingoLearn
 
                 cmd.Parameters.Add("@id", SqlDbType.Int).Direction = ParameterDirection.Output;
                 cmd.Parameters.Add("@username", SqlDbType.VarChar, 40).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("@role", SqlDbType.Int).Direction = ParameterDirection.Output;
 
                 cmd.Parameters.Add("@returnValue", SqlDbType.Int).Direction = ParameterDirection.ReturnValue;
 
@@ -86,7 +88,7 @@ namespace LingoLearn
                 {
                     login.id = Convert.ToInt32(cmd.Parameters["@id"].Value);
                     login.username = Convert.ToString(cmd.Parameters["@username"].Value);
-                    login.role = isTeacherOrStudent(login.id);
+                    login.role = Convert.ToInt32(cmd.Parameters["@role"].Value);
 
                     MessageBox.Show("logged in as " + String.Format("{0}#{1}", login.username, id), "login sucessfull", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -95,46 +97,9 @@ namespace LingoLearn
             }
         }
 
-
-        private int isTeacherOrStudent(int id)
+        private void register_label_Click(object sender, EventArgs e)
         {
-            SqlConnection cn = homepage.cn;
-            using (SqlCommand cmd = new SqlCommand("isTeacherOrStudent", cn))
-            {
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.Add("@id", SqlDbType.Int).Value = id;
-                cmd.Parameters.Add("@returnValue", SqlDbType.Int).Direction = ParameterDirection.ReturnValue;
-
-                cn.Open();
-                cmd.ExecuteNonQuery();
-                cn.Close();
-
-                int result = Convert.ToInt32(cmd.Parameters["@returnValue"].Value);
-
-                // 0 means neither, 1 means learner, 2 means teacher
-                return result;
-            }
+            utils.loadForm(this, new register());
         }
-
-        public static bool IsValidEmail(string email)
-        {
-            var trimmedEmail = email.Trim();
-
-            if (trimmedEmail.EndsWith("."))
-            {
-                return false;
-            }
-            try
-            {
-                var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == trimmedEmail;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
     }
 }

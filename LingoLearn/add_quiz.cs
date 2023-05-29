@@ -230,7 +230,7 @@ namespace LingoLearn
 
         public void addQuestions()
         {
-            SqlConnection cn = homepage.cn;
+            SqlConnection cn = startpage.cn;
 
             // Insert question and answer onto quiz
 
@@ -299,7 +299,7 @@ namespace LingoLearn
 
         public void addQuiz(String quizType)
         {
-            SqlConnection cn = homepage.cn;
+            SqlConnection cn = startpage.cn;
 
             try
             {

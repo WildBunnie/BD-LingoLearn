@@ -14,8 +14,8 @@ namespace LingoLearn
     public partial class quizes_to_answer : Form
     {
 
-        List<Quiz> quizlist = new List<Quiz>();
-        List<Question> questionlist = new List<Question>();
+        List<Quiz> quiz_list = new List<Quiz>();
+        List<Question> question_list = new List<Question>();
         public quizes_to_answer()
         {
             InitializeComponent();
@@ -24,184 +24,131 @@ namespace LingoLearn
         private void students_list_Load(object sender, EventArgs e)
         {
             loadQuizes();
-            dataGridView1.DataSource = quizlist;
-            dataGridView1.Columns["NumberQuestions"].Visible = false;
-            foreach (DataGridViewColumn column in dataGridView1.Columns)
-            {
-                column.SortMode = DataGridViewColumnSortMode.NotSortable;
-            }
-            dataGridView1.Rows[0].Selected = false;
+
+            quiz_table.DataSource = quiz_list.Select(o => new
+            { Name = o.Name, Type = o.Type, Answered = o.Answered, Language = o.Language, Creator = o.Creator }).ToList();
+
+            quiz_table.Rows[0].Selected = false;
         }
+
+        private void quiz_table_MouseClick(object sender, MouseEventArgs e)
+        {
+            foreach (DataGridViewRow row in quiz_table.Rows)
+            {
+                if (row.Selected == true && this.quiz_table.SelectedRows.Count == 1)
+                {
+                    Quiz quiz = quiz_list[row.Index];
+
+                    if (quiz.Answered.Equals("True"))
+                    {
+                        MessageBox.Show("Your score on this quiz is " + quiz.Score.ToString(), "Score", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        loadQuestions(quiz);
+                        utils.loadForm(this, new answer_quiz(question_list, quiz.ID));
+                    }
+                }
+            }
+        }
+
         private void loadQuizes()
         {
-            SqlConnection cn = homepage.cn;
-            try
+            SqlConnection cn = startpage.cn;
+
+            using (SqlCommand cmd = new SqlCommand("getUserQuizes", cn))
             {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@user_id", SqlDbType.Int).Value = login.id;
+
                 cn.Open();
-                using (SqlCommand cmd = new SqlCommand("getQuizes", cn))
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@user_id", SqlDbType.Int).Value = login.id;
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    while (reader.HasRows && reader.Read())
                     {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                Quiz q = new Quiz();
+                        Quiz quiz = new Quiz();
 
-                                q.ID = Convert.ToInt32(reader["id"]);
-                                q.Answered = "False";
+                        quiz.ID = Convert.ToInt32(reader["id"]);
+                        quiz.Type = reader["type"].ToString();
+                        quiz.Name = reader["name"].ToString();
+                        quiz.Creator = reader["creator"].ToString();
+                        quiz.Language = reader["language"].ToString();
+                        quiz.Answered = reader["answered"].ToString();
+                        quiz.Score = Convert.ToInt32(reader["score"]);
 
-                                q.Type = reader["type"].ToString();
-                                q.Name = reader["name"].ToString();
-
-                                if (reader["teacher_name"] != DBNull.Value)
-                                    q.Creator = reader["teacher_name"].ToString();
-                                else
-                                    q.Creator = "LingoLearn";
-
-                                q.Language = reader["designation"].ToString();
-
-                                if (reader["user_id"] != DBNull.Value && reader["user_id"].ToString().Equals(login.id.ToString()))
-                                {
-                                    q.Answered = "True";
-                                }
-
-                                Boolean found = false;
-                                int index = -1;
-                                for(int i = 0; i < quizlist.Count; i++)
-                                {
-                                    Quiz quiz = quizlist[i];
-                                    if(quiz.ID == q.ID)
-                                    {
-                                        found = true;
-                                        index = i;
-                                    }
-                                }
-                                if(!found)
-                                    quizlist.Add(q);
-                                else if(found && quizlist[index].Answered.Equals("False") && q.Answered.Equals("True"))
-                                {
-                                    quizlist.RemoveAt(index);
-                                    quizlist.Insert(index, q);
-                                }
-                            }
-                        }
+                        quiz_list.Add(quiz);
                     }
                 }
                 cn.Close();
             }
-            finally
-            {
-                if (cn.State != ConnectionState.Closed)
-                {
-                    cn.Close();
-                }
-            }
         }
-
-        private void dataGridView1_MouseClick(object sender, MouseEventArgs e)
+        private void loadQuestions(Quiz quiz)
         {
-            foreach (DataGridViewRow row in dataGridView1.Rows)
+            SqlConnection cn = startpage.cn;
+            using (SqlCommand cmd = new SqlCommand("getQuizQuestions", cn))
             {
-                if (row.Selected == true && this.dataGridView1.SelectedRows.Count == 1)
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@quiz_id", SqlDbType.Int).Value = quiz.ID;
+
+                cn.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    int index = row.Index;
-                    SqlConnection cn = homepage.cn;
-                    if (dataGridView1.Rows[index].Cells[3].Value.ToString().Equals("True"))
+                    while (reader.HasRows && reader.Read())
                     {
-                        using (SqlCommand cmd = new SqlCommand("getScore", cn))
+                        Answer a = new Answer();
+                        a.text = reader["answer"].ToString();
+                        a.score = Convert.ToInt32(reader["score"]);
+
+                        Question q = null;
+                        int question_id = Convert.ToInt32(reader["question_id"]);
+                        int q_index = getQuestion(question_id);
+                        if (q_index == -1)
                         {
-                            cmd.CommandType = CommandType.StoredProcedure;
-
-                            cmd.Parameters.Add("@user_id", SqlDbType.Int).Value = login.id;
-                            cmd.Parameters.Add("@quiz_id", SqlDbType.Int).Value = Convert.ToInt32(dataGridView1.Rows[index].Cells[0].Value);
-
-                            cmd.Parameters.Add("@score", SqlDbType.Int).Direction = ParameterDirection.Output;
-
-                            cn.Open();
-                            cmd.ExecuteNonQuery();
-                            cn.Close();
-                            int score = 0;
-                            if(cmd.Parameters["@score"].Value != DBNull.Value)
-                                score = Convert.ToInt32(cmd.Parameters["@score"].Value);
-                            MessageBox.Show("Your score on this quiz is " + score.ToString(), "Score", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            q = new Question();
+                            q.question_id = question_id;
+                            q.quiz_id = Convert.ToInt32(reader["quiz_id"]);
+                            q.question_id = Convert.ToInt32(reader["question_id"]);
+                            q.text = reader["question_text"].ToString();
+                            q.type = reader["type"].ToString();
+                            q.language = reader["designation"].ToString();
+                            q.answers = new List<Answer>();
+                            question_list.Add(q);
                         }
-                    }
-                    else
-                    {
-                        int quiz_id = Convert.ToInt32(dataGridView1.Rows[index].Cells[0].Value);
-                        using (SqlCommand cmd = new SqlCommand("getQuestions", cn))
+                        else
                         {
-                            cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.Add("@quiz_id", SqlDbType.Int).Value = quiz_id;
-                            cn.Open();
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                if (reader.HasRows)
-                                {
-                                    while (reader.Read())
-                                    {
-
-                                        Answer a = new Answer();
-                                        a.text = reader["answer"].ToString();
-                                        a.score = Convert.ToInt32(reader["score"]);
-
-                                        Question q = null;
-                                        int question_id = Convert.ToInt32(reader["question_id"]);
-                                        int q_index = getQuestion(question_id);
-                                        if (q_index == -1)
-                                        {
-                                            q = new Question();
-                                            q.question_id = question_id;
-                                            q.quiz_id = Convert.ToInt32(reader["quiz_id"]);
-                                            q.question_id = Convert.ToInt32(reader["question_id"]);
-                                            q.text = reader["question_text"].ToString();
-                                            q.type = reader["type"].ToString();
-                                            q.language = reader["designation"].ToString();
-                                            q.answers = new List<Answer>();
-                                            questionlist.Add(q);
-                                        }
-                                        else
-                                        {
-                                            q = questionlist[q_index];
-                                        }
-                                        q.answers.Add(a);
-                                    }
-                                }
-                            } cn.Close();
+                            q = question_list[q_index];
                         }
-                        var frm = new answer_quiz(questionlist, quiz_id);
-                        frm.Location = this.Location;
-                        frm.StartPosition = FormStartPosition.Manual;
-                        frm.Show();
-                        this.Hide();
+                        q.answers.Add(a);
                     }
                 }
+                cn.Close();
             }
         }
         private int getQuestion(int question_id)
         {
             int res = -1;
-            for (int i = 0; i < questionlist.Count; i++)
+            for (int i = 0; i < question_list.Count; i++)
             {
-                Question q = questionlist[i];
+                Question q = question_list[i];
                 if (q.question_id == question_id)
                     res = i;
-            }   
+            }
             return res;
+        }
+
+        private void look_for_teacher_button_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void leaderboards_button_Click(object sender, EventArgs e)
+        {
+            utils.loadForm(this, new leaderboards());
         }
 
         private void homepage_button_Click(object sender, EventArgs e)
         {
-            var frm = new Form();
-            frm = new student_page();
-            frm.Location = this.Location;
-            frm.StartPosition = FormStartPosition.Manual;
-            frm.Show();
-            this.Hide();
+            utils.loadForm(this, new student_page());
         }
     }
 
@@ -230,5 +177,6 @@ namespace LingoLearn
         public String Language { get; set; }
         public String Creator { get; set; }
         public String NumberQuestions { get; set; }
+        public int Score { get; set; }
     }
 }

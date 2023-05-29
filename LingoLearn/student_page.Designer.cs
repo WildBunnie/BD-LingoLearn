@@ -85,6 +85,7 @@ namespace LingoLearn
             this.settings_button.TabIndex = 9;
             this.settings_button.Text = "Settings";
             this.settings_button.UseVisualStyleBackColor = true;
+            this.settings_button.Click += new System.EventHandler(this.settings_button_Click);
             // 
             // student_page
             // 
@@ -98,7 +99,7 @@ namespace LingoLearn
             this.Controls.Add(this.hello_label);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "student_page";
-            this.Text = "Main Page";
+            this.Text = "Homepage";
             this.Load += new System.EventHandler(this.student_page_Load);
             this.ResumeLayout(false);
 

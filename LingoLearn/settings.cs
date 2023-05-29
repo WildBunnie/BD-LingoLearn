@@ -22,7 +22,7 @@ namespace LingoLearn
 
         private void availabilityCheck()
         {
-            SqlConnection cn = homepage.cn;
+            SqlConnection cn = startpage.cn;
             try
             {
                 cn.Open();
@@ -63,9 +63,7 @@ namespace LingoLearn
         private void homepage_button_Click(object sender, EventArgs e)
         {
             var frm = new Form();
-            if (login.role == 3)
-                frm = new student_teacher_page();
-            else if (login.role == 2)
+            if (login.role == 2)
                 frm = new teacher_page();
             else
                 frm = new student_page();
@@ -91,7 +89,7 @@ namespace LingoLearn
 
         private void updatePassword(String password)
         {
-            SqlConnection cn = homepage.cn;
+            SqlConnection cn = startpage.cn;
 
             try
             {
@@ -146,7 +144,7 @@ namespace LingoLearn
         {
             deleteUser();
             MessageBox.Show("User deleted successfully", "User deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            var homepage = new homepage();
+            var homepage = new startpage();
             homepage.Show();
             this.Close();
         }
@@ -161,7 +159,7 @@ namespace LingoLearn
 
         private void deleteUser()
         {
-            SqlConnection cn = homepage.cn;
+            SqlConnection cn = startpage.cn;
             try
             {
                 cn.Open();
@@ -187,7 +185,7 @@ namespace LingoLearn
         {
             if (!yes_available.Checked)
             {
-                SqlConnection cn = homepage.cn;
+                SqlConnection cn = startpage.cn;
                 try
                 {
                     cn.Open();
@@ -215,7 +213,7 @@ namespace LingoLearn
         {
             if (!no_available.Checked)
             {
-                SqlConnection cn = homepage.cn;
+                SqlConnection cn = startpage.cn;
                 try
                 {
                     cn.Open();

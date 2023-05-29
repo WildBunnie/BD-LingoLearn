@@ -1,7 +1,7 @@
 ﻿
 namespace LingoLearn
 {
-    partial class homepage
+    partial class startpage
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@ namespace LingoLearn
         private void InitializeComponent()
         {
             this.lingolearn = new System.Windows.Forms.Label();
-            this.sign_in_button = new System.Windows.Forms.Button();
+            this.login_button = new System.Windows.Forms.Button();
             this.register_label = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -45,41 +45,41 @@ namespace LingoLearn
             this.lingolearn.Text = "LingoLearn";
             this.lingolearn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // sign_in_button
+            // login_button
             // 
-            this.sign_in_button.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.login_button.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.sign_in_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.sign_in_button.Location = new System.Drawing.Point(283, 308);
-            this.sign_in_button.Name = "sign_in_button";
-            this.sign_in_button.Size = new System.Drawing.Size(300, 65);
-            this.sign_in_button.TabIndex = 7;
-            this.sign_in_button.Text = "Sign In";
-            this.sign_in_button.UseVisualStyleBackColor = true;
-            this.sign_in_button.Click += new System.EventHandler(this.sign_in_button_Click);
+            this.login_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.login_button.Location = new System.Drawing.Point(283, 308);
+            this.login_button.Name = "login_button";
+            this.login_button.Size = new System.Drawing.Size(300, 65);
+            this.login_button.TabIndex = 7;
+            this.login_button.Text = "Sign In";
+            this.login_button.UseVisualStyleBackColor = true;
+            this.login_button.Click += new System.EventHandler(this.sign_in_button_Click);
             // 
             // register_label
             // 
             this.register_label.AutoSize = true;
             this.register_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.register_label.Location = new System.Drawing.Point(395, 395);
+            this.register_label.Location = new System.Drawing.Point(398, 386);
             this.register_label.Name = "register_label";
             this.register_label.Size = new System.Drawing.Size(72, 20);
             this.register_label.TabIndex = 8;
             this.register_label.Text = "Register";
             this.register_label.Click += new System.EventHandler(this.register_label_Click);
             // 
-            // homepage
+            // startpage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(882, 553);
             this.Controls.Add(this.register_label);
-            this.Controls.Add(this.sign_in_button);
+            this.Controls.Add(this.login_button);
             this.Controls.Add(this.lingolearn);
-            this.Name = "homepage";
-            this.Text = "Homepage";
-            this.Load += new System.EventHandler(this.homepage_Load);
+            this.Name = "startpage";
+            this.Text = "StartPage";
+            this.Load += new System.EventHandler(this.startpage_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -88,7 +88,7 @@ namespace LingoLearn
         #endregion
 
         private System.Windows.Forms.Label lingolearn;
-        private System.Windows.Forms.Button sign_in_button;
+        private System.Windows.Forms.Button login_button;
         private System.Windows.Forms.Label register_label;
     }
 }

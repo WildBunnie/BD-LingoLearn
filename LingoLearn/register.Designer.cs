@@ -40,6 +40,7 @@ namespace LingoLearn
             this.teacher_or_student_label = new System.Windows.Forms.Label();
             this.teacher_radio = new System.Windows.Forms.RadioButton();
             this.student_radio = new System.Windows.Forms.RadioButton();
+            this.login_button = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // email_textbox
@@ -167,11 +168,25 @@ namespace LingoLearn
             this.student_radio.Text = "Student";
             this.student_radio.UseVisualStyleBackColor = true;
             // 
+            // login_button
+            // 
+            this.login_button.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.login_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.login_button.Location = new System.Drawing.Point(716, 35);
+            this.login_button.Name = "login_button";
+            this.login_button.Size = new System.Drawing.Size(122, 41);
+            this.login_button.TabIndex = 16;
+            this.login_button.Text = "Sign In";
+            this.login_button.UseVisualStyleBackColor = true;
+            this.login_button.Click += new System.EventHandler(this.login_button_Click);
+            // 
             // register
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(882, 553);
+            this.Controls.Add(this.login_button);
             this.Controls.Add(this.student_radio);
             this.Controls.Add(this.teacher_radio);
             this.Controls.Add(this.teacher_or_student_label);
@@ -204,6 +219,7 @@ namespace LingoLearn
         private System.Windows.Forms.Label teacher_or_student_label;
         private System.Windows.Forms.RadioButton teacher_radio;
         private System.Windows.Forms.RadioButton student_radio;
+        private System.Windows.Forms.Button login_button;
     }
 }
 

@@ -33,11 +33,13 @@ namespace LingoLearn
         private void next()
         {
             current += 1;
+
             if(current >= questions.Count)
             {
                 finish();
                 return;
             }
+
             Question q = questions[current];
             question_label.Text = q.text;
             if (q.type.Equals("Escolha Múltipla"))
@@ -70,7 +72,7 @@ namespace LingoLearn
         {
             MessageBox.Show("finished with a score of " + score.ToString(), "Score", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            SqlConnection cn = homepage.cn;
+            SqlConnection cn = startpage.cn;
             using (SqlCommand cmd = new SqlCommand("setUserAnsweredQuiz", cn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -97,11 +99,7 @@ namespace LingoLearn
                 }
             }
 
-            var frm = new quizes_to_answer();
-            frm.Location = this.Location;
-            frm.StartPosition = FormStartPosition.Manual;
-            frm.Show();
-            this.Hide();
+            utils.loadForm(this, new quizes_to_answer());
         }
 
         private void hide_buttons()

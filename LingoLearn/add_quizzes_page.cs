@@ -21,7 +21,7 @@ namespace LingoLearn
 
         List<Quiz> list = new List<Quiz>();
 
-        SqlConnection cn = homepage.cn;
+        SqlConnection cn = startpage.cn;
 
         public add_quizes()
         {

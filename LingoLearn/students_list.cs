@@ -31,7 +31,7 @@ namespace LingoLearn
         }
         private void loadStudents()
         {
-            SqlConnection cn = homepage.cn;
+            SqlConnection cn = startpage.cn;
             try
             {
                 String query = String.Format("SELECT username, designation " +

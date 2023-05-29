@@ -112,12 +112,13 @@
     <Compile Include="login.Designer.cs">
       <DependentUpon>login.cs</DependentUpon>
     </Compile>
-    <Compile Include="homepage.cs">
+    <Compile Include="startpage.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="homepage.Designer.cs">
-      <DependentUpon>homepage.cs</DependentUpon>
+    <Compile Include="startpage.Designer.cs">
+      <DependentUpon>startpage.cs</DependentUpon>
     </Compile>
+    <Compile Include="utils.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="add_quiz.resx">
@@ -126,8 +127,8 @@
     <EmbeddedResource Include="answer_quiz.resx">
       <DependentUpon>answer_quiz.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="homepage.resx">
-      <DependentUpon>homepage.cs</DependentUpon>
+    <EmbeddedResource Include="startpage.resx">
+      <DependentUpon>startpage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="settings.resx">
       <DependentUpon>settings.cs</DependentUpon>

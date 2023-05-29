@@ -19,7 +19,7 @@ namespace LingoLearn
 
         public static Form getPageFromRole()
         {
-            Form res;
+            Form res = null;
             switch (login.role)
             {
                 case 1:
@@ -30,6 +30,25 @@ namespace LingoLearn
                     break;
             }
             return res;
+        }
+
+        public static bool IsValidEmail(string email)
+        {
+            var trimmedEmail = email.Trim();
+
+            if (trimmedEmail.EndsWith("."))
+            {
+                return false;
+            }
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == trimmedEmail;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

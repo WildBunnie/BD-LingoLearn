@@ -4,7 +4,7 @@
 DROP PROC IF EXISTS userFromCredentials
 USE [LingoLearn]
 GO
-CREATE PROC userFromCredentials (@email varchar(40), @password varchar(40), @id int OUTPUT, @username varchar(40) OUTPUT)
+CREATE PROC userFromCredentials (@email varchar(40), @password varchar(40), @id int OUTPUT, @username varchar(40) OUTPUT, @role int OUTPUT)
 AS
 	SELECT @id = id, @username = username
 		FROM "USER"
@@ -23,9 +23,76 @@ AS
 		RETURN -2
 	END
 
+	-- set the role
+	-- 1 for learner or 2 for teacher
+	IF (SELECT count(*) FROM LEARNER WHERE id = @id) >= 1
+	BEGIN
+		SET @role = 1
+	END
+	ELSE IF (SELECT count(*) FROM TEACHER WHERE id = @id) >= 1
+	BEGIN
+		SET @role = 2
+	END
+
+	-- return 1 if everything is ok
 	RETURN 1
 GO
 
+
+DROP PROC IF EXISTS addUser
+USE [LingoLearn]
+GO
+CREATE PROC addUser (@username varchar(40), @email varchar(40), @password varchar(40), @isLearner bit, @isTeacher bit)
+AS
+	BEGIN TRY
+		INSERT INTO "USER" VALUES (@email, @username, @password)
+
+		-- get the id that was given to
+		-- the user when it was added
+		DECLARE @id int;
+		SELECT @id = id
+			FROM "USER"
+			WHERE email=@email
+
+		IF @isLearner = 1
+		BEGIN
+			INSERT INTO LEARNER VALUES (@id, 0)
+		END
+
+		ELSE IF @isTeacher = 1
+		BEGIN
+			INSERT INTO TEACHER VALUES (@id, 0, @username)
+		END
+
+		RETURN 1
+	END TRY
+	BEGIN CATCH
+		RETURN 0
+	END CATCH
+GO
+
+DROP PROC IF EXISTS getUserQuizes
+USE [LingoLearn]
+GO
+CREATE PROC getUserQuizes (@user_id int)
+AS
+	DROP TABLE IF EXISTS #temp
+	DROP TABLE IF EXISTS #temp_score
+	SELECT QUIZ.id, QUIZ.name, MAX(CASE user_id  WHEN @user_id THEN 'True' ELSE 'False' END) as answered, QUIZ.type, ISNULL(TEACHER.teacher_name,'LingoLearn') as creator, designation as "language"
+		INTO #temp
+		FROM (QUIZES_ANSWERED RIGHT OUTER JOIN QUIZ ON QUIZ.id = QUIZES_ANSWERED.quiz_id) LEFT OUTER JOIN TEACHER ON TEACHER.id = creator_id
+		WHERE EXISTS (SELECT * FROM TEACHES_STUDENTS WHERE learner_id = @user_id AND TEACHES_STUDENTS.teacher_id=TEACHER.id) OR TEACHER.id IS NULL
+		GROUP BY QUIZ.id, QUIZ.name, QUIZ.type, TEACHER.teacher_name, designation
+
+	SELECT user_id, quiz_id, sum(score) as score
+		INTO #temp_score
+		FROM (ANSWERS JOIN ANSWER ON ANSWERS.question_id = ANSWER.question_id AND ANSWERS.text = ANSWER.text) JOIN QUESTION ON QUESTION.id=ANSWER.question_id
+		GROUP BY ANSWERS.user_id, QUESTION.quiz_id
+		HAVING user_id=@user_id
+
+	SELECT * FROM
+		#temp JOIN #temp_score on #temp.id=#temp_score.quiz_id
+GO
 
 DROP PROC IF EXISTS setUserAnsweredQuiz
 USE [LingoLearn]
@@ -46,62 +113,10 @@ AS
 	(@user_id, @text, @question_id)
 GO
 
-
-DROP PROC IF EXISTS isTeacherOrStudent
+DROP PROC IF EXISTS getQuizQuestions
 USE [LingoLearn]
 GO
-CREATE PROC isTeacherOrStudent (@id int)
-AS
-	DECLARE @res int = 0
-
-	IF (SELECT count(*) FROM LEARNER WHERE id = @id) >= 1
-	BEGIN
-		SET @res = 1
-	END
-
-	IF (SELECT count(*) FROM TEACHER WHERE id = @id) >= 1
-	BEGIN
-		IF @res = 1
-		BEGIN
-			SET @res = 3
-		END
-		ELSE
-		BEGIN
-			SET @res = 2
-		END
-	END
-
-	-- 0 means neither, 1 means	learner, 2 means teacher, 3 means both
-	RETURN @res
-GO
-
-
-DROP PROC IF EXISTS getScore
-USE [LingoLearn]
-GO
-CREATE PROC getScore (@user_id int, @quiz_id int, @score int OUTPUT)
-AS
-	SELECT @score=sum(score)
-		FROM (ANSWERS JOIN ANSWER ON ANSWERS.question_id = ANSWER.question_id AND ANSWERS.text = ANSWER.text) JOIN QUESTION ON QUESTION.id=ANSWER.question_id
-		GROUP BY ANSWERS.user_id, QUESTION.quiz_id
-		HAVING user_id=@user_id AND quiz_id=@quiz_id
-GO
-
-
-DROP PROC IF EXISTS getQuizes
-USE [LingoLearn]
-GO
-CREATE PROC getQuizes
-AS
-	SELECT QUIZ.id, user_id, type, TEACHER.teacher_name, designation
-		FROM (QUIZES_ANSWERED RIGHT OUTER JOIN QUIZ ON QUIZ.id = QUIZES_ANSWERED.quiz_id) LEFT OUTER JOIN TEACHER ON TEACHER.id = creator_id
-GO
-
-
-DROP PROC IF EXISTS getQuestions
-USE [LingoLearn]
-GO
-CREATE PROC getQuestions (@quiz_id int)
+CREATE PROC getQuizQuestions (@quiz_id int)
 AS
 	SELECT quiz_id, id as question_id, question_text, text as answer, type, country_code, designation, score
 		FROM QUESTION JOIN ANSWER ON QUESTION.id=ANSWER.question_id
@@ -131,38 +146,6 @@ AS
 	JOIN TEACHES_LANGUAGE ON id = teacher_id 
 	WHERE id = @id
 GO
-
-
-DROP PROC IF EXISTS addUser
-USE [LingoLearn]
-GO
-CREATE PROC addUser (@username varchar(40), @email varchar(40), @password varchar(40), @isLearner bit, @isTeacher bit)
-AS
-	BEGIN TRY
-		INSERT INTO "USER" VALUES (@email, @username, @password)
-
-		DECLARE @id int;
-		SELECT @id = id
-			FROM "USER"
-			WHERE email=@email
-
-		IF @isLearner = 1
-		BEGIN
-			INSERT INTO LEARNER VALUES (@id, 0)
-		END
-
-		IF @isTeacher = 1
-		BEGIN
-			INSERT INTO TEACHER VALUES (@id, 0, @username)
-		END
-
-		RETURN 1
-	END TRY
-	BEGIN CATCH
-		RETURN 0
-	END CATCH
-GO
-
 
 
 DROP PROC IF EXISTS addQuiz
@@ -246,6 +229,9 @@ AS
 	WHERE id = @id
 GO
 
+DROP TRIGGER IF EXISTS deleteUserFromEverything
+USE [LingoLearn]
+GO
 CREATE TRIGGER deleteUserFromEverything
 ON "USER" INSTEAD OF DELETE AS
 BEGIN

@@ -35,6 +35,7 @@ namespace LingoLearn
             this.password_textbox = new System.Windows.Forms.TextBox();
             this.login_button = new System.Windows.Forms.Button();
             this.welcome_back_label = new System.Windows.Forms.Label();
+            this.register_label = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // email_textbox
@@ -106,11 +107,23 @@ namespace LingoLearn
             this.welcome_back_label.Text = "Welcome back!";
             this.welcome_back_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // register_label
+            // 
+            this.register_label.AutoSize = true;
+            this.register_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.register_label.Location = new System.Drawing.Point(407, 444);
+            this.register_label.Name = "register_label";
+            this.register_label.Size = new System.Drawing.Size(72, 20);
+            this.register_label.TabIndex = 9;
+            this.register_label.Text = "Register";
+            this.register_label.Click += new System.EventHandler(this.register_label_Click);
+            // 
             // login
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(882, 553);
+            this.Controls.Add(this.register_label);
             this.Controls.Add(this.welcome_back_label);
             this.Controls.Add(this.login_button);
             this.Controls.Add(this.password_label);
@@ -133,6 +146,7 @@ namespace LingoLearn
         private System.Windows.Forms.TextBox password_textbox;
         private System.Windows.Forms.Button login_button;
         private System.Windows.Forms.Label welcome_back_label;
+        private System.Windows.Forms.Label register_label;
     }
 }
 

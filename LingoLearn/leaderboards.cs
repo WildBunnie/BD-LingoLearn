@@ -32,7 +32,7 @@ namespace LingoLearn
 
         public void loadStudents()
         {
-            SqlConnection cn = homepage.cn;
+            SqlConnection cn = startpage.cn;
 
             cn.Open();
             using (SqlCommand cmd = new SqlCommand("getLeaderboard", cn))
