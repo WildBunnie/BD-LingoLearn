@@ -28,34 +28,22 @@ namespace LingoLearn
 
         private void students_button_Click(object sender, EventArgs e)
         {
-            var frm = new students_list();
-            frm.Location = this.Location;
-            frm.StartPosition = FormStartPosition.Manual;
-            frm.Show();
-            this.Close();
+            utils.loadForm(this, new students_list());
         }
 
         private void add_quizzes_button_Click(object sender, EventArgs e)
         {
-            var add_quizzes = new add_quizes();
-            add_quizzes.Show();
-            this.Close();
+            utils.loadForm(this, new add_quizes());
         }
 
         private void leaderboards_button_Click(object sender, EventArgs e)
         {
-            var frm = new leaderboards();
-            frm.Location = this.Location;
-            frm.StartPosition = FormStartPosition.Manual;
-            frm.Show();
-            this.Close();
+            utils.loadForm(this, new leaderboards());
         }
 
         private void settings_button_Click(object sender, EventArgs e)
         {
-            var settings = new settings();
-            settings.Show();
-            this.Close();
+            utils.loadForm(this, new settings());
         }
     }
 }

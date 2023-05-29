@@ -71,16 +71,15 @@ CREATE TABLE QUESTION(
 	quiz_id						int			NOT NULL);			-- Foreign key
 
 CREATE TABLE ANSWER(
+	id							int			IDENTITY(1,1) PRIMARY KEY,
 	score						int			NOT NULL,
 	"text"						VARCHAR(500),					
-	question_id					int,							-- Foreign key
-	PRIMARY KEY("text", question_id));
+	question_id					int);							-- Foreign key
 
 CREATE TABLE ANSWERS(
 	"user_id"					int,
-	"text"						VARCHAR(500),
-	question_id					int,
-	PRIMARY KEY("user_id", "text", question_id));							-- Both foreign keys
+	answer_id					int,
+	PRIMARY KEY("user_id", answer_id));							-- Both foreign keys
 
 
 -- TEACHER TABLE
@@ -202,6 +201,6 @@ ALTER TABLE ANSWERS
 			REFERENCES "USER"(id);
 
 ALTER TABLE ANSWERS
-			ADD CONSTRAINT fk_answers_question_id
-			FOREIGN KEY ("text", question_id)
-			REFERENCES ANSWER("text", question_id);
+			ADD CONSTRAINT fk_answers_answer_id
+			FOREIGN KEY (answer_id)
+			REFERENCES ANSWER(id);

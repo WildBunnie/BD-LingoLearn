@@ -28,7 +28,8 @@ namespace LingoLearn
             quiz_table.DataSource = quiz_list.Select(o => new
             { Name = o.Name, Type = o.Type, Answered = o.Answered, Language = o.Language, Creator = o.Creator }).ToList();
 
-            quiz_table.Rows[0].Selected = false;
+            if(quiz_table.Rows.Count != 0)
+                quiz_table.Rows[0].Selected = false;
         }
 
         private void quiz_table_MouseClick(object sender, MouseEventArgs e)
@@ -98,6 +99,7 @@ namespace LingoLearn
                         Answer a = new Answer();
                         a.text = reader["answer"].ToString();
                         a.score = Convert.ToInt32(reader["score"]);
+                        a.ID = Convert.ToInt32(reader["answer_id"]);
 
                         Question q = null;
                         int question_id = Convert.ToInt32(reader["question_id"]);
@@ -166,6 +168,7 @@ namespace LingoLearn
     {
         public String text { get; set; }
         public int score { get; set; }
+        public int ID { get; set; }
     }
 
     public class Quiz

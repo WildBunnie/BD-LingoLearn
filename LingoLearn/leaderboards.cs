@@ -59,15 +59,10 @@ namespace LingoLearn
 
         private void homepage_button_Click(object sender, EventArgs e)
         {
-            var frm = new Form();
             if (login.role == 2)
-                frm = new teacher_page();
+                utils.loadForm(this, new teacher_page());
             else
-                frm = new student_page();
-            frm.Location = this.Location;
-            frm.StartPosition = FormStartPosition.Manual;
-            frm.Show();
-            this.Hide();
+                utils.loadForm(this, new student_page());
         }
 
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
@@ -77,9 +72,7 @@ namespace LingoLearn
 
         private void settings_button_Click(object sender, EventArgs e)
         {
-            var frm = new settings();
-            frm.Show();
-            this.Hide();
+            utils.loadForm(this, new settings());
         }
     }
 

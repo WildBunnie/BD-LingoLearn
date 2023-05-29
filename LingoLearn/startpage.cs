@@ -25,8 +25,8 @@ namespace LingoLearn
         {
             cn = new SqlConnection("Data Source = localhost;" +
                         "Initial Catalog = LingoLearn;" +
-                        "uid = pedro;" +
-                        "password = pedro");
+                        "uid = joao_andrade;" +
+                        "password = tmFJ.<?~fMSR8Xr*Eck|d");
         }
 
         private void sign_in_button_Click(object sender, EventArgs e)
