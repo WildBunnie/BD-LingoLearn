@@ -65,6 +65,7 @@ CREATE TABLE DIFICULTY(
 
 CREATE TABLE QUIZ(
 	id							int			IDENTITY(1,1)	PRIMARY KEY,
+	"name"						VARCHAR(20)	NOT NULL,
 	"type"						VARCHAR(20)	NOT NULL,			
 	designation					VARCHAR(40)			NOT NULL,			-- Foreign key
 	country_code				int			NOT NULL,

@@ -38,6 +38,7 @@ namespace LingoLearn
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.dropdown = new System.Windows.Forms.ComboBox();
+            this.quiz_name = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -113,7 +114,7 @@ namespace LingoLearn
             // radioButton2
             // 
             this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(631, 129);
+            this.radioButton2.Location = new System.Drawing.Point(782, 129);
             this.radioButton2.Name = "radioButton2";
             this.radioButton2.Size = new System.Drawing.Size(88, 21);
             this.radioButton2.TabIndex = 7;
@@ -125,7 +126,7 @@ namespace LingoLearn
             // radioButton1
             // 
             this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(631, 102);
+            this.radioButton1.Location = new System.Drawing.Point(782, 104);
             this.radioButton1.Name = "radioButton1";
             this.radioButton1.Size = new System.Drawing.Size(66, 21);
             this.radioButton1.TabIndex = 6;
@@ -137,16 +138,24 @@ namespace LingoLearn
             // dropdown
             // 
             this.dropdown.FormattingEnabled = true;
-            this.dropdown.Location = new System.Drawing.Point(735, 114);
+            this.dropdown.Location = new System.Drawing.Point(631, 126);
             this.dropdown.Name = "dropdown";
             this.dropdown.Size = new System.Drawing.Size(135, 24);
             this.dropdown.TabIndex = 8;
+            // 
+            // quiz_name
+            // 
+            this.quiz_name.Location = new System.Drawing.Point(632, 100);
+            this.quiz_name.Name = "quiz_name";
+            this.quiz_name.Size = new System.Drawing.Size(134, 22);
+            this.quiz_name.TabIndex = 9;
             // 
             // add_quizes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(882, 553);
+            this.Controls.Add(this.quiz_name);
             this.Controls.Add(this.dropdown);
             this.Controls.Add(this.radioButton2);
             this.Controls.Add(this.radioButton1);
@@ -158,8 +167,8 @@ namespace LingoLearn
             this.Controls.Add(this.add_quizzes_button);
             this.Name = "add_quizes";
             this.Text = "Quizzes";
-            this.Load += new System.EventHandler(this.quiz_list_load);
             this.Load += new System.EventHandler(this.designations_load);
+            this.Load += new System.EventHandler(this.quiz_list_load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -177,5 +186,6 @@ namespace LingoLearn
         private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.ComboBox dropdown;
+        private System.Windows.Forms.TextBox quiz_name;
     }
 }

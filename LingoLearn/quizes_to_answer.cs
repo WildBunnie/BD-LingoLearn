@@ -213,6 +213,7 @@ namespace LingoLearn
     public class Quiz
     {
         public int ID { get; set; }
+        public String Name { get; set; }
         public String Type { get; set; }
         public String Answered { get; set; }
         public String Language { get; set; }
