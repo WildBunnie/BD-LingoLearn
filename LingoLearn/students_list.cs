@@ -78,6 +78,15 @@ namespace LingoLearn
             add_quizzes.Show();
             this.Close();
         }
+
+        private void leaderboards_button_Click(object sender, EventArgs e)
+        {
+            var frm = new leaderboards();
+            frm.Location = this.Location;
+            frm.StartPosition = FormStartPosition.Manual;
+            frm.Show();
+            this.Close();
+        }
     }
     public class Student
     {

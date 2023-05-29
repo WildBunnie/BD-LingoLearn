@@ -128,7 +128,7 @@ GO
 CREATE PROCEDURE getDesignations (@id int)
 AS
 	SELECT designation FROM TEACHER 
-	JOIN KNOWS ON id = user_id 
+	JOIN TEACHES_LANGUAGE ON id = teacher_id 
 	WHERE id = @id
 GO
 
@@ -211,4 +211,82 @@ AS
 	-- score, text, question_id
 	(@score, @answer_text, @question_id)
 
+GO
+
+
+DROP PROC IF EXISTS getAvailability
+USE [LingoLearn]
+GO
+
+CREATE PROCEDURE getAvailability (@id int)
+AS
+	SELECT available FROM TEACHER
+	WHERE id = @id
+GO
+
+
+DROP PROC IF EXISTS updateAvailability
+USE [LingoLearn]
+GO
+
+CREATE PROCEDURE updateAvailability (@id int, @bool bit)
+AS
+	UPDATE "TEACHER"
+	SET available = @bool
+	WHERE id = @id
+GO
+
+
+DROP PROC IF EXISTS deleteUser
+USE [LingoLearn]
+GO
+CREATE PROCEDURE deleteUser (@id int)
+AS
+	DELETE FROM "USER"
+	WHERE id = @id
+GO
+
+CREATE TRIGGER deleteUserFromEverything
+ON "USER" INSTEAD OF DELETE AS
+BEGIN
+	DECLARE @id int = (SELECT id FROM deleted)
+
+	DELETE FROM TEACHES_STUDENTS
+	WHERE teacher_id = @id
+
+	DELETE FROM TEACHES_LANGUAGE
+	WHERE teacher_id = @id
+
+	DELETE FROM QUIZ
+	WHERE creator_id = @id
+
+	DELETE FROM TEACHER
+	WHERE id = @id
+
+	DELETE FROM "USER"
+	WHERE id = @id
+END
+GO
+
+DROP PROC IF EXISTS updatePassword
+USE [LingoLearn]
+GO
+CREATE PROCEDURE updatePassword (@id int, @password varchar(40))
+AS
+	UPDATE "USER"
+	SET "password" = @password
+	WHERE id = @id
+GO
+
+
+DROP PROC IF EXISTS getLeaderboard
+USE [LingoLearn]
+GO
+CREATE PROC getLeaderboard
+AS
+	SELECT "USER".id, "USER".username, ISNULL(SUM(score),0) as score
+		FROM "USER" LEFT OUTER JOIN (ANSWERS JOIN ANSWER ON ANSWERS.question_id=ANSWER.question_id) ON "USER".id = ANSWERS.user_id
+		WHERE EXISTS (SELECT id FROM LEARNER WHERE LEARNER.id = "USER".id)
+		GROUP BY id, "USER".username
+		ORDER BY score DESC
 GO

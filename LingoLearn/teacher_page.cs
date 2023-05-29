@@ -41,5 +41,21 @@ namespace LingoLearn
             add_quizzes.Show();
             this.Close();
         }
+
+        private void leaderboards_button_Click(object sender, EventArgs e)
+        {
+            var frm = new leaderboards();
+            frm.Location = this.Location;
+            frm.StartPosition = FormStartPosition.Manual;
+            frm.Show();
+            this.Close();
+        }
+
+        private void settings_button_Click(object sender, EventArgs e)
+        {
+            var settings = new settings();
+            settings.Show();
+            this.Close();
+        }
     }
 }

@@ -75,6 +75,7 @@ namespace LingoLearn
             this.leaderboards_button.TabIndex = 8;
             this.leaderboards_button.Text = "Leaderboards";
             this.leaderboards_button.UseVisualStyleBackColor = true;
+            this.leaderboards_button.Click += new System.EventHandler(this.leaderboards_button_Click);
             // 
             // settings_button
             // 
@@ -84,6 +85,7 @@ namespace LingoLearn
             this.settings_button.TabIndex = 9;
             this.settings_button.Text = "Settings";
             this.settings_button.UseVisualStyleBackColor = true;
+            this.settings_button.Click += new System.EventHandler(this.settings_button_Click);
             // 
             // teacher_page
             // 

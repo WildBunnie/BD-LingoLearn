@@ -1,0 +1,29 @@
+DROP PROC IF EXISTS deleteUser
+USE [LingoLearn]
+GO
+CREATE PROCEDURE deleteUser (@id int)
+AS
+	DELETE FROM "USER"
+	WHERE id = @id
+GO
+
+CREATE TRIGGER deleteUserFromEverything
+ON "USER" INSTEAD OF DELETE AS
+BEGIN
+	DECLARE @id int = (SELECT id FROM deleted)
+
+	DELETE FROM TEACHES_STUDENTS
+	WHERE teacher_id = @id
+
+	DELETE FROM TEACHES_LANGUAGE
+	WHERE teacher_id = @id
+
+	DELETE FROM QUIZ
+	WHERE creator_id = @id
+
+	DELETE FROM TEACHER
+	WHERE id = @id
+
+	DELETE FROM "USER"
+	WHERE id = @id
+END
