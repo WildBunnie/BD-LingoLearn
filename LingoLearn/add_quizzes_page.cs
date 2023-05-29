@@ -158,7 +158,20 @@ namespace LingoLearn
                     cn.Close();
                 }
             }
-        }        
+        }
+
+        private void homepage_button_Click(object sender, EventArgs e)
+        {
+            var frm = new Form();
+            if (login.role == 3)
+                frm = new student_teacher_page();
+            else
+                frm = new teacher_page();
+            frm.Location = this.Location;
+            frm.StartPosition = FormStartPosition.Manual;
+            frm.Show();
+            this.Hide();
+        }
     }
 
 }

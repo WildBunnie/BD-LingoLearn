@@ -65,6 +65,7 @@ namespace LingoLearn
             this.look_for_teacher_button.TabIndex = 7;
             this.look_for_teacher_button.Text = "Look for Teacher";
             this.look_for_teacher_button.UseVisualStyleBackColor = true;
+            this.look_for_teacher_button.Click += new System.EventHandler(this.look_for_teacher_button_Click);
             // 
             // leaderboards_button
             // 
@@ -74,6 +75,7 @@ namespace LingoLearn
             this.leaderboards_button.TabIndex = 8;
             this.leaderboards_button.Text = "Leaderboards";
             this.leaderboards_button.UseVisualStyleBackColor = true;
+            this.leaderboards_button.Click += new System.EventHandler(this.leaderboards_button_Click);
             // 
             // settings_button
             // 

@@ -52,6 +52,12 @@
     <Compile Include="answer_quiz.Designer.cs">
       <DependentUpon>answer_quiz.cs</DependentUpon>
     </Compile>
+    <Compile Include="leaderboards.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="leaderboards.Designer.cs">
+      <DependentUpon>leaderboards.cs</DependentUpon>
+    </Compile>
     <Compile Include="quizes_to_answer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -122,6 +128,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="homepage.resx">
       <DependentUpon>homepage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="leaderboards.resx">
+      <DependentUpon>leaderboards.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="quizes_to_answer.resx">
       <DependentUpon>quizes_to_answer.cs</DependentUpon>

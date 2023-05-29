@@ -1,7 +1,7 @@
 ﻿
 namespace LingoLearn
 {
-    partial class quizes_to_answer
+    partial class leaderboards
     {
         /// <summary>
         /// Required designer variable.
@@ -29,36 +29,17 @@ namespace LingoLearn
         /// </summary>
         private void InitializeComponent()
         {
-            this.look_for_teacher_button = new System.Windows.Forms.Button();
-            this.leaderboards_button = new System.Windows.Forms.Button();
             this.homepage_button = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.settings_button = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
-            // look_for_teacher_button
-            // 
-            this.look_for_teacher_button.Location = new System.Drawing.Point(12, 30);
-            this.look_for_teacher_button.Name = "look_for_teacher_button";
-            this.look_for_teacher_button.Size = new System.Drawing.Size(282, 50);
-            this.look_for_teacher_button.TabIndex = 0;
-            this.look_for_teacher_button.Text = "Look for teacher";
-            this.look_for_teacher_button.UseVisualStyleBackColor = true;
-            // 
-            // leaderboards_button
-            // 
-            this.leaderboards_button.Location = new System.Drawing.Point(300, 30);
-            this.leaderboards_button.Name = "leaderboards_button";
-            this.leaderboards_button.Size = new System.Drawing.Size(282, 50);
-            this.leaderboards_button.TabIndex = 1;
-            this.leaderboards_button.Text = "Leaderboards";
-            this.leaderboards_button.UseVisualStyleBackColor = true;
-            // 
             // homepage_button
             // 
-            this.homepage_button.Location = new System.Drawing.Point(588, 30);
+            this.homepage_button.Location = new System.Drawing.Point(12, 27);
             this.homepage_button.Name = "homepage_button";
-            this.homepage_button.Size = new System.Drawing.Size(282, 50);
+            this.homepage_button.Size = new System.Drawing.Size(420, 50);
             this.homepage_button.TabIndex = 4;
             this.homepage_button.Text = "Homepage";
             this.homepage_button.UseVisualStyleBackColor = true;
@@ -82,32 +63,38 @@ namespace LingoLearn
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 24;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(858, 375);
-            this.dataGridView1.TabIndex = 3;
-            this.dataGridView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseClick);
+            this.dataGridView1.Size = new System.Drawing.Size(858, 330);
+            this.dataGridView1.TabIndex = 10;
+            this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
             // 
-            // quizes_to_answer
+            // settings_button
+            // 
+            this.settings_button.Location = new System.Drawing.Point(438, 27);
+            this.settings_button.Name = "settings_button";
+            this.settings_button.Size = new System.Drawing.Size(432, 50);
+            this.settings_button.TabIndex = 11;
+            this.settings_button.Text = "Settings";
+            this.settings_button.UseVisualStyleBackColor = true;
+            // 
+            // leaderboards
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(882, 553);
+            this.Controls.Add(this.settings_button);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.homepage_button);
-            this.Controls.Add(this.leaderboards_button);
-            this.Controls.Add(this.look_for_teacher_button);
-            this.Name = "quizes_to_answer";
-            this.Text = "Students";
-            this.Load += new System.EventHandler(this.students_list_Load);
+            this.Name = "leaderboards";
+            this.Text = "Leaderboard";
+            this.Load += new System.EventHandler(this.leaderboards_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button look_for_teacher_button;
-        private System.Windows.Forms.Button leaderboards_button;
         private System.Windows.Forms.Button homepage_button;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Button settings_button;
     }
 }

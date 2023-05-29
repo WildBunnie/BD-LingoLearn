@@ -32,7 +32,21 @@ namespace LingoLearn
             frm.Location = this.Location;
             frm.StartPosition = FormStartPosition.Manual;
             frm.Show();
-            this.Hide();
+            this.Close();
+        }
+
+        private void look_for_teacher_button_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void leaderboards_button_Click(object sender, EventArgs e)
+        {
+            var frm = new leaderboards();
+            frm.Location = this.Location;
+            frm.StartPosition = FormStartPosition.Manual;
+            frm.Show();
+            this.Close();
         }
     }
 }

@@ -57,6 +57,7 @@ namespace LingoLearn
             this.add_quizzes_button.TabIndex = 6;
             this.add_quizzes_button.Text = "Add Quizzes";
             this.add_quizzes_button.UseVisualStyleBackColor = true;
+            this.add_quizzes_button.Click += new System.EventHandler(this.add_quizzes_button_Click);
             // 
             // students_button
             // 
@@ -102,6 +103,7 @@ namespace LingoLearn
             this.answer_quizes_button.TabIndex = 10;
             this.answer_quizes_button.Text = "Answer Quizzes";
             this.answer_quizes_button.UseVisualStyleBackColor = true;
+            this.answer_quizes_button.Click += new System.EventHandler(this.answer_quizes_button_Click);
             // 
             // student_teacher_page
             // 
