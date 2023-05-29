@@ -60,6 +60,7 @@ namespace LingoLearn
             this.leaderboards_button.TabIndex = 1;
             this.leaderboards_button.Text = "Leaderboards";
             this.leaderboards_button.UseVisualStyleBackColor = true;
+            this.leaderboards_button.Click += new System.EventHandler(this.leaderboards_button_Click);
             // 
             // settings_button
             // 
@@ -167,7 +168,6 @@ namespace LingoLearn
             this.Controls.Add(this.add_quizzes_button);
             this.Name = "add_quizes";
             this.Text = "Quizzes";
-            this.Load += new System.EventHandler(this.designations_load);
             this.Load += new System.EventHandler(this.quiz_list_load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);

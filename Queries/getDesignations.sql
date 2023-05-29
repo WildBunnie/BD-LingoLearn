@@ -4,6 +4,6 @@ GO
 CREATE PROCEDURE getDesignations (@id int)
 AS
 	SELECT designation FROM TEACHER 
-	JOIN KNOWS ON id = user_id 
+	JOIN TEACHES_LANGUAGE ON id = teacher_id
 	WHERE id = @id
 GO
