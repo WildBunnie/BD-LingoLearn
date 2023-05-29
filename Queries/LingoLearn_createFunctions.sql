@@ -118,12 +118,20 @@ USE [LingoLearn]
 GO
 CREATE PROC getQuizQuestions (@quiz_id int)
 AS
-	SELECT quiz_id, id as question_id, question_text, text as answer, type, country_code, designation, score
+	SELECT quiz_id, id as question_id, question_text, text as answer, type, designation, score
 		FROM QUESTION JOIN ANSWER ON QUESTION.id=ANSWER.question_id
 		WHERE quiz_id=@quiz_id
 GO
 
-
+DROP PROC IF EXISTS getQuizes
+USE [LingoLearn]
+GO
+CREATE PROC getQuizes (@user_id int)
+AS
+	SELECT QUIZ.id, QUIZ.name, user_id, type, TEACHER.id as teacher_id,TEACHER.teacher_name, designation
+			FROM (QUIZES_ANSWERED RIGHT OUTER JOIN QUIZ ON QUIZ.id = QUIZES_ANSWERED.quiz_id) LEFT OUTER JOIN TEACHER ON TEACHER.id = creator_id
+			WHERE EXISTS (SELECT * FROM TEACHES_STUDENTS WHERE learner_id = @user_id AND TEACHES_STUDENTS.teacher_id=TEACHER.id) OR TEACHER.id IS NULL
+GO
 
 DROP PROC IF EXISTS getProfessorQuizzes
 USE [LingoLearn]
@@ -154,11 +162,9 @@ GO
 
 CREATE PROCEDURE addQuiz (@quizName VARCHAR(20), @quizType VARCHAR(20), @designation VARCHAR(40), @creator_id int)
 AS
-	DECLARE @country_code int
-	SELECT @country_code = country_code FROM "LANGUAGE" WHERE designation = @designation
 
 	INSERT INTO QUIZ VALUES
-	(@quizName, @quizType, @designation, @country_code, @creator_id)
+	(@quizName, @quizType, @designation, @creator_id)
 
 	SELECT SCOPE_IDENTITY() as id
 GO
@@ -171,12 +177,10 @@ GO
 
 CREATE PROCEDURE addQuestion (@question_type VARCHAR(20), @question_text VARCHAR(300), @designation VARCHAR(40), @quiz_id int)
 AS
-	DECLARE @country_code int
-	SELECT @country_code = country_code FROM "LANGUAGE" WHERE designation = @designation
 
 	INSERT INTO QUESTION VALUES
-	-- type, text, designation, country_code, quiz_id
-	(@question_type, @question_text, @designation, @country_code, @quiz_id)
+	-- type, text, designation, quiz_id
+	(@question_type, @question_text, @designation, @quiz_id)
 
 	SELECT SCOPE_IDENTITY() as id
 GO
@@ -275,4 +279,25 @@ AS
 		WHERE EXISTS (SELECT id FROM LEARNER WHERE LEARNER.id = "USER".id)
 		GROUP BY id, "USER".username
 		ORDER BY score DESC
+GO
+
+DROP PROC IF EXISTS addLanguage
+USE [LingoLearn]
+GO
+
+CREATE PROCEDURE addLanguage (@id int, @designation VARCHAR(40))
+AS
+	INSERT INTO TEACHES_LANGUAGE
+	VALUES (@designation, @id)
+GO
+
+
+DROP PROC IF EXISTS removeLanguage
+USE [LingoLearn]
+GO
+
+CREATE PROCEDURE removeLanguage (@id int, @designation VARCHAR(40))
+AS
+	INSERT INTO TEACHES_LANGUAGE
+	VALUES (@designation, @id)
 GO

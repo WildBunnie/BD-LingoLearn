@@ -36,6 +36,7 @@ namespace LingoLearn
             dataGridView1.Columns["Answered"].Visible = false;
             dataGridView1.Columns["Creator"].Visible = false;
             dataGridView1.Columns["ID"].Visible = false;
+            dataGridView1.Columns["Score"].Visible = false;
 
             foreach (DataGridViewColumn column in dataGridView1.Columns)
             {
@@ -187,6 +188,13 @@ namespace LingoLearn
             frm.StartPosition = FormStartPosition.Manual;
             frm.Show();
             this.Close();
+        }
+
+        private void settings_button_Click(object sender, EventArgs e)
+        {
+            var frm = new settings();
+            frm.Show();
+            this.Hide();
         }
     }
 

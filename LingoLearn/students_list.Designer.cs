@@ -65,6 +65,7 @@ namespace LingoLearn
             this.settings_button.TabIndex = 2;
             this.settings_button.Text = "Settings";
             this.settings_button.UseVisualStyleBackColor = true;
+            this.settings_button.Click += new System.EventHandler(this.settings_button_Click);
             // 
             // dataGridView1
             // 

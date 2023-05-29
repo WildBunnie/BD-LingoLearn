@@ -23,52 +23,39 @@ CREATE TABLE TEACHES_STUDENTS(
 	learner_id					int,
 	teacher_id					int,
 	designation					VARCHAR(40),
-	country_code				int,
-	PRIMARY KEY(learner_id, teacher_id));						-- Both foreign keys
+	PRIMARY KEY(designation, learner_id, teacher_id));						-- Both foreign keys
 
 CREATE TABLE TEACHES_LANGUAGE(
 	designation					VARCHAR(40),
-	country_code				int,
 	teacher_id					int,
-	PRIMARY KEY(designation, country_code, teacher_id));						-- Both foreign keys
-
-CREATE TABLE COUNTRY(
-	code						int				IDENTITY(1,1) PRIMARY KEY,
-	"name"						VARCHAR(40)		UNIQUE NOT NULL,
-	flag						CHAR(2)			UNIQUE NOT NULL);
+	PRIMARY KEY(designation, teacher_id));						-- Both foreign keys
 
 CREATE TABLE "LANGUAGE"(
-	designation					VARCHAR(40)		UNIQUE NOT NULL,							
-	country_code				int,							-- Foreign key
-	PRIMARY KEY(designation, country_code));
+	designation				VARCHAR(40)		PRIMARY KEY,
+	);
 
 CREATE TABLE LEARNING(
 	"user_id"					int,
 	designation					VARCHAR(40),
-	country_code				int,
-	PRIMARY KEY("user_id", designation, country_code));						-- Both foreign keys
+	PRIMARY KEY("user_id", designation));						-- Both foreign keys
 
 CREATE TABLE KNOWS(
 	"user_id"					int,
 	designation					VARCHAR(40),
-	country_code				int,
-	PRIMARY KEY("user_id", designation, country_code));						-- Both foreign keys
+	PRIMARY KEY("user_id", designation));						-- Both foreign keys
 
 
 CREATE TABLE DIFICULTY(
 	designation_1				VARCHAR(40),
-	country_code_1				int,
 	designation_2				VARCHAR(40),
-	country_code_2				int,
 	"value"						int,							
-	PRIMARY KEY(designation_1, designation_2, country_code_1, country_code_2));					-- Both foreign keys
+	PRIMARY KEY(designation_1, designation_2));					-- Both foreign keys
 
 CREATE TABLE QUIZ(
 	id							int			IDENTITY(1,1)	PRIMARY KEY,
 	"name"						VARCHAR(20)	NOT NULL,
 	"type"						VARCHAR(20)	NOT NULL,			
 	designation					VARCHAR(40)			NOT NULL,			-- Foreign key
-	country_code				int			NOT NULL,
 	creator_id					int);			-- Foreign key
 
 CREATE TABLE QUIZES_ANSWERED(
@@ -81,7 +68,6 @@ CREATE TABLE QUESTION(
 	"type"						VARCHAR(20)	NOT NULL,			
 	question_text				VARCHAR(300)NOT NULL,			
 	designation					VARCHAR(40)			NOT NULL,			-- Foreign key
-	country_code				int			NOT NULL,			-- foreign key
 	quiz_id						int			NOT NULL);			-- Foreign key
 
 CREATE TABLE ANSWER(
@@ -122,25 +108,19 @@ ALTER TABLE TEACHES_STUDENTS
 
 ALTER TABLE TEACHES_STUDENTS
 			ADD CONSTRAINT fk_teach_students_language
-			FOREIGN KEY (designation, country_code)
-			REFERENCES "LANGUAGE"(designation, country_code);
+			FOREIGN KEY (designation)
+			REFERENCES "LANGUAGE"(designation);
 
 -- TEACHES_LANGUAGE TABLE
 ALTER TABLE TEACHES_LANGUAGE
 			ADD CONSTRAINT fk_language_id
-			FOREIGN KEY (designation, country_code) -- changed
-			REFERENCES "LANGUAGE"(designation, country_code);
+			FOREIGN KEY (designation) 
+			REFERENCES "LANGUAGE"(designation);
 
 ALTER TABLE TEACHES_LANGUAGE
 			ADD CONSTRAINT fk_teach_id
 			FOREIGN KEY (teacher_id)
 			REFERENCES TEACHER(id);
-
--- LANGUAGE TABLE
-ALTER TABLE "LANGUAGE"
-			ADD CONSTRAINT fk_country_id
-			FOREIGN KEY (country_code)
-			REFERENCES COUNTRY(code);
 
 -- LEARNING TABLE
 ALTER TABLE LEARNING
@@ -150,8 +130,8 @@ ALTER TABLE LEARNING
 
 ALTER TABLE LEARNING
 			ADD CONSTRAINT fk_language_learning_id
-			FOREIGN KEY (designation, country_code) -- changed
-			REFERENCES "LANGUAGE"(designation, country_code);
+			FOREIGN KEY (designation)
+			REFERENCES "LANGUAGE"(designation);
 
 -- KNOWS TABLE
 ALTER TABLE KNOWS
@@ -161,25 +141,25 @@ ALTER TABLE KNOWS
 
 ALTER TABLE KNOWS
 			ADD CONSTRAINT fk_language_knows_id
-			FOREIGN KEY (designation, country_code) -- changed
-			REFERENCES "LANGUAGE"(designation, country_code);
+			FOREIGN KEY (designation)
+			REFERENCES "LANGUAGE"(designation);
 
 -- DIFICULTY TABLE
 ALTER TABLE DIFICULTY
 			ADD CONSTRAINT fk_language_1_id
-			FOREIGN KEY (designation_1, country_code_1) -- changed
-			REFERENCES "LANGUAGE"(designation, country_code);
+			FOREIGN KEY (designation_1)
+			REFERENCES "LANGUAGE"(designation);
 
 ALTER TABLE DIFICULTY
 			ADD CONSTRAINT fk_language_2_id
-			FOREIGN KEY (designation_2, country_code_2) -- changed
-			REFERENCES "LANGUAGE"(designation, country_code);
+			FOREIGN KEY (designation_2)
+			REFERENCES "LANGUAGE"(designation);
 
 -- QUIZ TABLE
 ALTER TABLE QUIZ
 			ADD CONSTRAINT fk_quiz_language_id
-			FOREIGN KEY (designation, country_code) -- changed
-			REFERENCES "LANGUAGE"(designation, country_code);
+			FOREIGN KEY (designation)
+			REFERENCES "LANGUAGE"(designation);
 
 ALTER TABLE QUIZ
 			ADD CONSTRAINT fk_quiz_creator_id
@@ -200,8 +180,8 @@ ALTER TABLE QUIZES_ANSWERED
 -- QUESTION TABLE
 ALTER TABLE QUESTION
 			ADD CONSTRAINT fk_question_language_id
-			FOREIGN KEY (designation, country_code) -- changed
-			REFERENCES "LANGUAGE"(designation, country_code);
+			FOREIGN KEY (designation)
+			REFERENCES "LANGUAGE"(designation);
 
 ALTER TABLE QUESTION
 			ADD CONSTRAINT fk_question_quiz_id

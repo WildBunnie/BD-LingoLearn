@@ -14,15 +14,21 @@ namespace LingoLearn
     public partial class settings : Form
     {
         String available;
+        int languagesNumber = 6;
+        String designation;
+
+        SqlConnection cn = startpage.cn;
+
+
         public settings()
         {
             InitializeComponent();
-            availabilityCheck();
+            availability_load();
+            language_load();
         }
 
-        private void availabilityCheck()
+        private void availability_load()
         {
-            SqlConnection cn = startpage.cn;
             try
             {
                 cn.Open();
@@ -60,6 +66,66 @@ namespace LingoLearn
             }
         }
 
+        private void language_load()
+        {
+            try
+            {
+                cn.Open();
+                using (SqlCommand cmd = new SqlCommand("getDesignations", cn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            activateLanguage(reader["designation"].ToString());
+                        }
+                    }
+                }
+                cn.Close();
+            }
+            finally
+            {
+                if (cn.State != ConnectionState.Closed)
+                {
+                    cn.Close();
+                }
+            }
+        }
+        
+        private void activateLanguage(String designation)
+        {
+            // horrible code practice due to DRY principle, but we're short on time
+            if (designation.Equals(portuguese_box.Text))
+            {
+                portuguese_box.Checked = true;  return;
+            }
+            else if (designation.Equals(english_box.Text))
+            {
+                english_box.Checked = true; return;
+            }
+            else if (designation.Equals(italian_box.Text))
+            {
+                italian_box.Checked = true; return;
+            }
+            else if (designation.Equals(french_box.Text))
+            {
+                french_box.Checked = true; return;
+            }
+            else if (designation.Equals(spanish_box.Text))
+            {
+                spanish_box.Checked = true; return;
+            }
+            else if (designation.Equals(korean_box.Text))
+            {
+                korean_box.Checked = true; return;
+            }
+                
+        }
+
         private void homepage_button_Click(object sender, EventArgs e)
         {
             var frm = new Form();
@@ -89,8 +155,6 @@ namespace LingoLearn
 
         private void updatePassword(String password)
         {
-            SqlConnection cn = startpage.cn;
-
             try
             {
                 cn.Open();
@@ -159,7 +223,7 @@ namespace LingoLearn
 
         private void deleteUser()
         {
-            SqlConnection cn = startpage.cn;
+            
             try
             {
                 cn.Open();
@@ -183,9 +247,8 @@ namespace LingoLearn
 
         private void yes_available_CheckedChanged(object sender, EventArgs e)
         {
-            if (!yes_available.Checked)
+            if (yes_available.Checked)
             {
-                SqlConnection cn = startpage.cn;
                 try
                 {
                     cn.Open();
@@ -211,9 +274,8 @@ namespace LingoLearn
 
         private void no_available_CheckedChanged(object sender, EventArgs e)
         {
-            if (!no_available.Checked)
+            if (no_available.Checked)
             {
-                SqlConnection cn = startpage.cn;
                 try
                 {
                     cn.Open();
@@ -234,6 +296,193 @@ namespace LingoLearn
                         cn.Close();
                     }
                 }
+            }
+        }
+
+        // Languages check - Sad code below //
+        private void portuguese_box_CheckedChanged(object sender, EventArgs e)
+        {
+            if (portuguese_box.Checked)
+            {
+                try
+                {
+                    cn.Open();
+                    using (SqlCommand cmd = new SqlCommand("addLanguage", cn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
+                        cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = portuguese_box.Text;
+                        cmd.ExecuteNonQuery();
+                    }
+                    cn.Close();
+                }
+                finally
+                {
+                    if (cn.State != ConnectionState.Closed)
+                    {
+                        cn.Close();
+                    }
+                }
+            }
+            else
+            {
+
+            }
+        }
+
+        private void spanish_box_CheckedChanged(object sender, EventArgs e)
+        {
+            if (spanish_box.Checked)
+            {
+                try
+                {
+                    cn.Open();
+                    using (SqlCommand cmd = new SqlCommand("addLanguage", cn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
+                        cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = spanish_box.Text;
+                        cmd.ExecuteNonQuery();
+                    }
+                    cn.Close();
+                }
+                finally
+                {
+                    if (cn.State != ConnectionState.Closed)
+                    {
+                        cn.Close();
+                    }
+                }
+            }
+            else
+            {
+
+            }
+        }
+
+        private void english_box_CheckedChanged(object sender, EventArgs e)
+        {
+            if (english_box.Checked)
+            {
+                try
+                {
+                    cn.Open();
+                    using (SqlCommand cmd = new SqlCommand("addLanguage", cn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
+                        cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = english_box.Text;
+                        cmd.ExecuteNonQuery();
+                    }
+                    cn.Close();
+                }
+                finally
+                {
+                    if (cn.State != ConnectionState.Closed)
+                    {
+                        cn.Close();
+                    }
+                }
+            }
+            else
+            {
+
+            }
+        }
+
+        private void korean_box_CheckedChanged(object sender, EventArgs e)
+        {
+            if (korean_box.Checked)
+            {
+                try
+                {
+                    cn.Open();
+                    using (SqlCommand cmd = new SqlCommand("addLanguage", cn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
+                        cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = korean_box.Text;
+                        cmd.ExecuteNonQuery();
+                    }
+                    cn.Close();
+                }
+                finally
+                {
+                    if (cn.State != ConnectionState.Closed)
+                    {
+                        cn.Close();
+                    }
+                }
+            }
+            else
+            {
+
+            }
+        }
+
+        private void french_box_CheckedChanged(object sender, EventArgs e)
+        {
+            if (french_box.Checked)
+            {
+                try
+                {
+                    cn.Open();
+                    using (SqlCommand cmd = new SqlCommand("addLanguage", cn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
+                        cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = french_box.Text;
+                        cmd.ExecuteNonQuery();
+                    }
+                    cn.Close();
+                }
+                finally
+                {
+                    if (cn.State != ConnectionState.Closed)
+                    {
+                        cn.Close();
+                    }
+                }
+            }
+            else
+            {
+
+            }
+        }
+
+        private void italian_box_CheckedChanged(object sender, EventArgs e)
+        {
+            if (italian_box.Checked)
+            {
+                try
+                {
+                    cn.Open();
+                    using (SqlCommand cmd = new SqlCommand("addLanguage", cn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
+                        cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = italian_box.Text;
+                        cmd.ExecuteNonQuery();
+                    }
+                    cn.Close();
+                }
+                finally
+                {
+                    if (cn.State != ConnectionState.Closed)
+                    {
+                        cn.Close();
+                    }
+                }
+            }
+            else
+            {
+
             }
         }
     }

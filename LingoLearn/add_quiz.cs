@@ -287,6 +287,7 @@ namespace LingoLearn
                         currentQ++;
                     }
                 }
+                cn.Close();
             }
             finally
             {
