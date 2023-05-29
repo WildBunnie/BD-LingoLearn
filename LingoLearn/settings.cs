@@ -330,7 +330,29 @@ namespace LingoLearn
             }
             else
             {
+                if (loaded)
+                {
+                    try
+                    {
+                        cn.Open();
+                        using (SqlCommand cmd = new SqlCommand("removeLanguage", cn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
 
+                            cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
+                            cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = portuguese_box.Text;
+                            cmd.ExecuteNonQuery();
+                        }
+                        cn.Close();
+                    }
+                    finally
+                    {
+                        if (cn.State != ConnectionState.Closed)
+                        {
+                            cn.Close();
+                        }
+                    }
+                }
             }
         }
 
@@ -361,7 +383,29 @@ namespace LingoLearn
             }
             else
             {
+                if (loaded)
+                {
+                    try
+                    {
+                        cn.Open();
+                        using (SqlCommand cmd = new SqlCommand("removeLanguage", cn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
 
+                            cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
+                            cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = spanish_box.Text;
+                            cmd.ExecuteNonQuery();
+                        }
+                        cn.Close();
+                    }
+                    finally
+                    {
+                        if (cn.State != ConnectionState.Closed)
+                        {
+                            cn.Close();
+                        }
+                    }
+                }
             }
         }
 
@@ -392,7 +436,29 @@ namespace LingoLearn
             }
             else
             {
+                if (loaded)
+                {
+                    try
+                    {
+                        cn.Open();
+                        using (SqlCommand cmd = new SqlCommand("removeLanguage", cn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
 
+                            cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
+                            cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = english_box.Text;
+                            cmd.ExecuteNonQuery();
+                        }
+                        cn.Close();
+                    }
+                    finally
+                    {
+                        if (cn.State != ConnectionState.Closed)
+                        {
+                            cn.Close();
+                        }
+                    }
+                }
             }
         }
 
@@ -423,7 +489,29 @@ namespace LingoLearn
             }
             else
             {
+                if (loaded)
+                {
+                    try
+                    {
+                        cn.Open();
+                        using (SqlCommand cmd = new SqlCommand("removeLanguage", cn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
 
+                            cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
+                            cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = korean_box.Text;
+                            cmd.ExecuteNonQuery();
+                        }
+                        cn.Close();
+                    }
+                    finally
+                    {
+                        if (cn.State != ConnectionState.Closed)
+                        {
+                            cn.Close();
+                        }
+                    }
+                }
             }
         }
 
@@ -454,7 +542,29 @@ namespace LingoLearn
             }
             else
             {
+                if (loaded)
+                {
+                    try
+                    {
+                        cn.Open();
+                        using (SqlCommand cmd = new SqlCommand("removeLanguage", cn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
 
+                            cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
+                            cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = french_box.Text;
+                            cmd.ExecuteNonQuery();
+                        }
+                        cn.Close();
+                    }
+                    finally
+                    {
+                        if (cn.State != ConnectionState.Closed)
+                        {
+                            cn.Close();
+                        }
+                    }
+                }
             }
         }
 
@@ -485,7 +595,29 @@ namespace LingoLearn
             }
             else
             {
+                if (loaded)
+                {
+                    try
+                    {
+                        cn.Open();
+                        using (SqlCommand cmd = new SqlCommand("removeLanguage", cn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
 
+                            cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
+                            cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = italian_box.Text;
+                            cmd.ExecuteNonQuery();
+                        }
+                        cn.Close();
+                    }
+                    finally
+                    {
+                        if (cn.State != ConnectionState.Closed)
+                        {
+                            cn.Close();
+                        }
+                    }
+                }
             }
         }
     }

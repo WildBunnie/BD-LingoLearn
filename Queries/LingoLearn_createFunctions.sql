@@ -371,6 +371,22 @@ GO
 
 CREATE PROCEDURE removeLanguage (@id int, @designation VARCHAR(40))
 AS
-	INSERT INTO TEACHES_LANGUAGE
-	VALUES (@designation, @id)
+	DELETE FROM TEACHES_LANGUAGE WHERE teacher_id = @id AND designation = @designation
+GO
+
+DROP TRIGGER IF EXISTS deleteUserLanguageFromEverything
+USE [LingoLearn]
+GO
+CREATE TRIGGER deleteUserLanguageFromEverything
+ON TEACHES_LANGUAGE INSTEAD OF DELETE AS
+BEGIN
+	DECLARE @id int = (SELECT teacher_id FROM deleted)
+	DECLARE @designation VARCHAR(40) = (SELECT designation FROM deleted)
+
+	DELETE FROM TEACHES_STUDENTS
+	WHERE teacher_id = @id AND designation = @designation
+
+	DELETE FROM TEACHES_LANGUAGE
+	WHERE teacher_id = @id AND designation = @designation
+END
 GO
