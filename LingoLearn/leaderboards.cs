@@ -74,6 +74,13 @@ namespace LingoLearn
         {
             dataGridView1.ClearSelection();
         }
+
+        private void settings_button_Click(object sender, EventArgs e)
+        {
+            var frm = new settings();
+            frm.Show();
+            this.Hide();
+        }
     }
 
     public class LeaderboardStudent

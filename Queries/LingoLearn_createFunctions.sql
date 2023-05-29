@@ -74,11 +74,11 @@ GO
 DROP FUNCTION IF EXISTS isStudentOf
 USE [LingoLearn]
 GO
-CREATE FUNCTION dbo.isStudentOf (@student_id int, @teacher_id int, @country_code int, @designation varchar(40))
+CREATE FUNCTION dbo.isStudentOf (@student_id int, @teacher_id int, @designation varchar(40))
 RETURNS int
 AS
 BEGIN
-    IF (SELECT COUNT(*) FROM TEACHES_STUDENTS WHERE learner_id = @student_id AND teacher_id=@teacher_id and country_code=@country_code AND designation=@designation) >= 1
+    IF (SELECT COUNT(*) FROM TEACHES_STUDENTS WHERE learner_id = @student_id AND teacher_id=@teacher_id AND designation=@designation) >= 1
 	BEGIN
 		RETURN 1
 	END
@@ -90,11 +90,11 @@ GO
 DROP FUNCTION IF EXISTS isLearningLanguage
 USE [LingoLearn]
 GO
-CREATE FUNCTION dbo.isLearningLanguage (@student_id int, @country_code int, @designation varchar(40))
+CREATE FUNCTION dbo.isLearningLanguage (@student_id int, @designation varchar(40))
 RETURNS int
 AS
 BEGIN
-    IF (SELECT COUNT(*) FROM LEARNING WHERE LEARNING.user_id = @student_id AND LEARNING.country_code = @country_code AND LEARNING.designation = @designation) >= 1
+    IF (SELECT COUNT(*) FROM LEARNING WHERE LEARNING.user_id = @student_id AND LEARNING.designation = @designation) >= 1
 	BEGIN
 		RETURN 1
 	END
@@ -113,7 +113,7 @@ AS
 	SELECT QUIZ.id, QUIZ.name, MAX(CASE user_id  WHEN @user_id THEN 'True' ELSE 'False' END) as answered, QUIZ.type, ISNULL(TEACHER.teacher_name,'LingoLearn') as creator, designation as "language"
 		INTO #temp
 		FROM (QUIZES_ANSWERED RIGHT OUTER JOIN QUIZ ON QUIZ.id = QUIZES_ANSWERED.quiz_id) LEFT OUTER JOIN TEACHER ON TEACHER.id = creator_id
-		WHERE (dbo.isStudentOf(@user_id, TEACHER.id, country_code, designation) = 1 OR TEACHER.id IS NULL) AND dbo.isLearningLanguage(@user_id, QUIZ.country_code, QUIZ.designation) = 1
+		WHERE (dbo.isStudentOf(@user_id, TEACHER.id, designation) = 1 OR TEACHER.id IS NULL) AND dbo.isLearningLanguage(@user_id, QUIZ.designation) = 1
 		GROUP BY QUIZ.id, QUIZ.name, QUIZ.type, TEACHER.teacher_name, designation
 
 	SELECT user_id, quiz_id, sum(score) as score
@@ -131,9 +131,9 @@ USE [LingoLearn]
 GO
 CREATE PROC getPossibleTeachers (@user_id int)
 AS
-	SELECT id, teacher_name, designation as "language", MAX(CASE dbo.isStudentOf(@user_id, id, country_code, designation)  WHEN 1 THEN 'True' ELSE 'False' END) as teaches_you
+	SELECT id, teacher_name, designation as "language", MAX(CASE dbo.isStudentOf(@user_id, id, designation)  WHEN 1 THEN 'True' ELSE 'False' END) as teaches_you
 		FROM TEACHER JOIN TEACHES_LANGUAGE ON TEACHER.id = TEACHES_LANGUAGE.teacher_id
-		WHERE available=1 AND dbo.isLearningLanguage(@user_id, country_code, designation)=1
+		WHERE available=1 AND dbo.isLearningLanguage(@user_id, designation)=1
 		GROUP BY id, teacher_name, designation
 GO
 
@@ -161,40 +161,48 @@ USE [LingoLearn]
 GO
 CREATE PROC getQuizQuestions (@quiz_id int)
 AS
-	SELECT quiz_id, id as question_id, question_text, text as answer, type, country_code, designation, score
+	SELECT quiz_id, id as question_id, question_text, text as answer, type, designation, score
 		FROM QUESTION JOIN ANSWER ON QUESTION.id=ANSWER.question_id
 		WHERE quiz_id=@quiz_id
 GO
 
-
+DROP PROC IF EXISTS getQuizes
+USE [LingoLearn]
+GO
+CREATE PROC getQuizes (@user_id int)
+AS
+	SELECT QUIZ.id, QUIZ.name, user_id, type, TEACHER.id as teacher_id,TEACHER.teacher_name, designation
+			FROM (QUIZES_ANSWERED RIGHT OUTER JOIN QUIZ ON QUIZ.id = QUIZES_ANSWERED.quiz_id) LEFT OUTER JOIN TEACHER ON TEACHER.id = creator_id
+			WHERE EXISTS (SELECT * FROM TEACHES_STUDENTS WHERE learner_id = @user_id AND TEACHES_STUDENTS.teacher_id=TEACHER.id) OR TEACHER.id IS NULL
+GO
 
 DROP PROC IF EXISTS getPossibleTeachers
 USE [LingoLearn]
 GO
 CREATE PROC getPossibleTeachers (@user_id int)
 AS
-	SELECT id, teacher_name, designation, country_code, MAX(CASE dbo.isStudentOf(@user_id, id, country_code, designation)  WHEN 1 THEN 'True' ELSE 'False' END) as teaches_you
+	SELECT id, teacher_name, designation, MAX(CASE dbo.isStudentOf(@user_id, id, designation)  WHEN 1 THEN 'True' ELSE 'False' END) as teaches_you
 		FROM TEACHER JOIN TEACHES_LANGUAGE ON TEACHER.id = TEACHES_LANGUAGE.teacher_id
-		WHERE available=1 AND dbo.isLearningLanguage(@user_id, country_code, designation)=1
-		GROUP BY id, teacher_name, designation, country_code
+		WHERE available=1 AND dbo.isLearningLanguage(@user_id, designation)=1
+		GROUP BY id, teacher_name, designation
 GO
 
 DROP PROC IF EXISTS startTeaching
 USE [LingoLearn]
 GO
-CREATE PROC startTeaching (@teacher_id int, @student_id int, @country_code int, @designation varchar(40))
+CREATE PROC startTeaching (@teacher_id int, @student_id int, @designation varchar(40))
 AS
 	INSERT INTO TEACHES_STUDENTS VALUES
-	(@student_id, @teacher_id, @designation, @country_code)
+	(@student_id, @teacher_id, @designation)
 GO
 
 DROP PROC IF EXISTS stopTeaching
 USE [LingoLearn]
 GO
-CREATE PROC stopTeaching (@teacher_id int, @student_id int, @country_code int, @designation varchar(40))
+CREATE PROC stopTeaching (@teacher_id int, @student_id int, @designation varchar(40))
 AS
 	DELETE FROM TEACHES_STUDENTS 
-	WHERE learner_id=@student_id and teacher_id=@teacher_id and designation=@designation and country_code = @country_code
+	WHERE learner_id=@student_id and teacher_id=@teacher_id and designation=@designation
 GO
 
 
@@ -215,11 +223,9 @@ GO
 
 CREATE PROCEDURE addQuiz (@quizName VARCHAR(20), @quizType VARCHAR(20), @designation VARCHAR(40), @creator_id int)
 AS
-	DECLARE @country_code int
-	SELECT @country_code = country_code FROM "LANGUAGE" WHERE designation = @designation
 
 	INSERT INTO QUIZ VALUES
-	(@quizName, @quizType, @designation, @country_code, @creator_id)
+	(@quizName, @quizType, @designation, @creator_id)
 
 	SELECT SCOPE_IDENTITY() as id
 GO
@@ -232,12 +238,10 @@ GO
 
 CREATE PROCEDURE addQuestion (@question_type VARCHAR(20), @question_text VARCHAR(300), @designation VARCHAR(40), @quiz_id int)
 AS
-	DECLARE @country_code int
-	SELECT @country_code = country_code FROM "LANGUAGE" WHERE designation = @designation
 
 	INSERT INTO QUESTION VALUES
-	-- type, text, designation, country_code, quiz_id
-	(@question_type, @question_text, @designation, @country_code, @quiz_id)
+	-- type, text, designation, quiz_id
+	(@question_type, @question_text, @designation, @quiz_id)
 
 	SELECT SCOPE_IDENTITY() as id
 GO
@@ -341,10 +345,32 @@ GO
 DROP PROC IF EXISTS getProfessorQuizzes
 USE [LingoLearn]
 GO
+
 CREATE PROCEDURE getProfessorQuizzes (@id int)
 AS
 	SELECT QUIZ.name, Quiz."type", Quiz.designation, quiz_id, count(QUESTION.id) as n_questions FROM QUESTION 
 		JOIN QUIZ ON QUIZ.id = quiz_id 
 		WHERE creator_id = @id 
 		GROUP BY quiz.name, quiz_id, Quiz."type", Quiz.designation
+GO
+		
+DROP PROC IF EXISTS addLanguage
+USE [LingoLearn]
+GO
+
+CREATE PROCEDURE addLanguage (@id int, @designation VARCHAR(40))
+AS
+	INSERT INTO TEACHES_LANGUAGE
+	VALUES (@designation, @id)
+GO
+
+
+DROP PROC IF EXISTS removeLanguage
+USE [LingoLearn]
+GO
+
+CREATE PROCEDURE removeLanguage (@id int, @designation VARCHAR(40))
+AS
+	INSERT INTO TEACHES_LANGUAGE
+	VALUES (@designation, @id)
 GO

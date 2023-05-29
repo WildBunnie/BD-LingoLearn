@@ -50,7 +50,6 @@ namespace LingoLearn
                         teacher.ID = Convert.ToInt32(reader["id"]);
                         teacher.Name = reader["teacher_name"].ToString();
                         teacher.Language = reader["designation"].ToString();
-                        teacher.CountryCode = reader["country_code"].ToString();
                         teacher.TeachesYou = reader["teaches_you"].ToString();
 
                         teacher_list.Add(teacher);
@@ -80,7 +79,6 @@ namespace LingoLearn
 
                                 cmd.Parameters.Add("@teacher_id", SqlDbType.Int).Value = teacher.ID;
                                 cmd.Parameters.Add("@student_id", SqlDbType.Int).Value = login.id;
-                                cmd.Parameters.Add("@country_code", SqlDbType.Int).Value = teacher.CountryCode;
                                 cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = teacher.Language;
 
                                 cn.Open();
@@ -103,7 +101,6 @@ namespace LingoLearn
 
                                 cmd.Parameters.Add("@teacher_id", SqlDbType.Int).Value = teacher.ID;
                                 cmd.Parameters.Add("@student_id", SqlDbType.Int).Value = login.id;
-                                cmd.Parameters.Add("@country_code", SqlDbType.Int).Value = teacher.CountryCode;
                                 cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = teacher.Language;
 
                                 cn.Open();
@@ -138,7 +135,6 @@ namespace LingoLearn
         public int ID { get; set; }
         public String Name { get; set; }
         public String Language { get; set; }
-        public String CountryCode { get; set; }
         public String TeachesYou { get; set; }
     }
 }

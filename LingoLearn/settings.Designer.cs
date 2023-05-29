@@ -205,12 +205,13 @@ namespace LingoLearn
             // 
             this.italian_box.AutoSize = true;
             this.italian_box.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.italian_box.Location = new System.Drawing.Point(594, 126);
+            this.italian_box.Location = new System.Drawing.Point(601, 126);
             this.italian_box.Name = "italian_box";
             this.italian_box.Size = new System.Drawing.Size(114, 36);
             this.italian_box.TabIndex = 24;
             this.italian_box.Text = "Italian";
             this.italian_box.UseVisualStyleBackColor = true;
+            this.italian_box.CheckedChanged += new System.EventHandler(this.italian_box_CheckedChanged);
             // 
             // french_box
             // 
@@ -222,6 +223,7 @@ namespace LingoLearn
             this.french_box.TabIndex = 23;
             this.french_box.Text = "French";
             this.french_box.UseVisualStyleBackColor = true;
+            this.french_box.CheckedChanged += new System.EventHandler(this.french_box_CheckedChanged);
             // 
             // korean_box
             // 
@@ -233,6 +235,7 @@ namespace LingoLearn
             this.korean_box.TabIndex = 22;
             this.korean_box.Text = "Korean";
             this.korean_box.UseVisualStyleBackColor = true;
+            this.korean_box.CheckedChanged += new System.EventHandler(this.korean_box_CheckedChanged);
             // 
             // english_box
             // 
@@ -244,6 +247,7 @@ namespace LingoLearn
             this.english_box.TabIndex = 20;
             this.english_box.Text = "English";
             this.english_box.UseVisualStyleBackColor = true;
+            this.english_box.CheckedChanged += new System.EventHandler(this.english_box_CheckedChanged);
             // 
             // spanish_box
             // 
@@ -255,6 +259,7 @@ namespace LingoLearn
             this.spanish_box.TabIndex = 18;
             this.spanish_box.Text = "Spanish";
             this.spanish_box.UseVisualStyleBackColor = true;
+            this.spanish_box.CheckedChanged += new System.EventHandler(this.spanish_box_CheckedChanged);
             // 
             // portuguese_box
             // 
@@ -266,6 +271,7 @@ namespace LingoLearn
             this.portuguese_box.TabIndex = 16;
             this.portuguese_box.Text = "Portuguese";
             this.portuguese_box.UseVisualStyleBackColor = true;
+            this.portuguese_box.CheckedChanged += new System.EventHandler(this.portuguese_box_CheckedChanged);
             // 
             // change_pass_panel
             // 
