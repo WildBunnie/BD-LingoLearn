@@ -138,7 +138,7 @@ namespace LingoLearn
 
         private void look_for_teacher_button_Click(object sender, EventArgs e)
         {
-
+            utils.loadForm(this, new teachers_list());
         }
 
         private void leaderboards_button_Click(object sender, EventArgs e)

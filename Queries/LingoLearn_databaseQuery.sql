@@ -24,7 +24,7 @@ CREATE TABLE TEACHES_STUDENTS(
 	teacher_id					int,
 	designation					VARCHAR(40),
 	country_code				int,
-	PRIMARY KEY(learner_id, teacher_id));						-- Both foreign keys
+	PRIMARY KEY(learner_id, teacher_id, designation, country_code));						-- Both foreign keys
 
 CREATE TABLE TEACHES_LANGUAGE(
 	designation					VARCHAR(40),

@@ -82,6 +82,12 @@
     <Compile Include="add_quizzes_page.Designer.cs">
       <DependentUpon>add_quizzes_page.cs</DependentUpon>
     </Compile>
+    <Compile Include="teachers_list.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="teachers_list.Designer.cs">
+      <DependentUpon>teachers_list.cs</DependentUpon>
+    </Compile>
     <Compile Include="students_list.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -141,6 +147,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="add_quizzes_page.resx">
       <DependentUpon>add_quizzes_page.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="teachers_list.resx">
+      <DependentUpon>teachers_list.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="students_list.resx">
       <DependentUpon>students_list.cs</DependentUpon>

@@ -31,6 +31,7 @@ namespace LingoLearn
         private void quiz_list_load(object sender, EventArgs e)
         {
             quiz_load();
+            loadDesignations();
 
             dataGridView1.DataSource = list;
             dataGridView1.Columns["Answered"].Visible = false;
@@ -41,11 +42,6 @@ namespace LingoLearn
             {
                 column.SortMode = DataGridViewColumnSortMode.NotSortable;
             }
-        }
-
-        private void designations_load(object sender, EventArgs e)
-        {
-            getDesignations();
         }
 
         private void quiz_load()
@@ -136,7 +132,7 @@ namespace LingoLearn
             grammar = true;
         }
 
-        public void getDesignations()
+        public void loadDesignations()
         {
             try
             {
