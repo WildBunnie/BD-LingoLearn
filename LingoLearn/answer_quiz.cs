@@ -60,11 +60,11 @@ namespace LingoLearn
             {
                 answer_translate_text_box.Clear();
                 next_question_button.Visible = true;
-                if (current + 1 == questions.Count)
-                {
-                    next_question_button.Text = "End Quiz";
-                }
                 hide_buttons();
+            }
+            if (current + 1 == questions.Count)
+            {
+                next_question_button.Text = "End Quiz";
             }
         }
 

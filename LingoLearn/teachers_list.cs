@@ -28,7 +28,8 @@ namespace LingoLearn
             {
                 column.SortMode = DataGridViewColumnSortMode.NotSortable;
             }
-            teacher_table.Rows[0].Selected = false;
+            if (teacher_table.Rows.Count > 0)
+                teacher_table.Rows[0].Selected = false;
         }
         private void loadTeachers()
         {
