@@ -15,22 +15,22 @@ namespace LingoLearn
     {
         List<Question> questions = new List<Question>();
         List<Answer> answers = new List<Answer>();
-        List<String> answersMulti = new List<String>();
         List<int> questions_id = new List<int>();
 
         bool multi = false;
         bool translation = false;
         int quiz_id;
         int question_id;
-        int value;
         String designation;
         String quizType;
+        String quizName;
 
-        public add_quiz(String quizType, int quiz_id, String designation)
+        public add_quiz(String quizName, String quizType, int quiz_id, String designation)
         {
             this.quiz_id = quiz_id;
             this.designation = designation;
             this.quizType = quizType;
+            this.quizName = quizName;
             InitializeComponent();
         }
 
@@ -39,87 +39,107 @@ namespace LingoLearn
             addQuiz(quizType);
             if (translation)
             {
-                Question q = new Question();
-                
-                q.type = "Tradução";
-                q.question_text = question_text.Text;
+                if(question_text.Text.Equals("") || answer_text.Text.Equals(""))
+                {
+                    MessageBox.Show("Missing [Question/Answer] text!", "Question creation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    Question q = new Question();
 
-                questions.Add(q);
+                    q.type = "Tradução";
+                    q.question_text = question_text.Text;
 
-                Answer a = new Answer();
+                    questions.Add(q);
 
-                a.score = 100;
-                a.answer_text = answer_text.Text;
-                a.answer_type = "trad";
+                    Answer a = new Answer();
 
-                answers.Add(a);
+                    a.score = 100;
+                    a.answer_text = answer_text.Text;
+                    a.answer_type = "trad";
 
-                addQuestions();
+                    answers.Add(a);
+
+                    addQuestions();
+                    // load add_quizzes again
+                    var show_quizzes = new add_quizes();
+                    show_quizzes.Show();
+                    this.Close();
+                }
             }
             else
             {
-                int checkedBox = 0;
-                Question q = new Question();
-
-                q.type = "Escolha Múltipla";
-                q.question_text = question_text.Text;
-
-                questions.Add(q);
-
-                if (multi_check_1.Checked)
-                    checkedBox++;
-                if (multi_check_2.Checked)
-                    checkedBox++;
-                if (multi_check_3.Checked)
-                    checkedBox++;
-                if (multi_check_4.Checked)
-                    checkedBox++;
-
-                int score = 100 / checkedBox;
-
-                Answer a = new Answer();
-                if (multi_check_1.Checked)
-                    a.score = score;
+                if (question_text.Text.Equals("") || multi_text_1.Text.Equals("") || multi_text_2.Text.Equals("") || multi_text_3.Text.Equals("") || multi_text_4.Text.Equals("") || 
+                    (!multi_check_1.Checked && !multi_check_2.Checked && !multi_check_3.Checked && !multi_check_4.Checked))
+                {
+                    MessageBox.Show("Missing [Question/Answer/Score]!", "Question creation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 else
-                    a.score = 0;
-                a.answer_text = multi_text_1.Text;
-                a.answer_type = "multi";
-                answers.Add(a);
+                {
+                    int checkedBox = 0;
+                    Question q = new Question();
 
-                a = new Answer();
-                if (multi_check_2.Checked)
-                    a.score = score;
-                else
-                    a.score = 0;
-                a.answer_text = multi_text_2.Text;
-                a.answer_type = "multi";
-                answers.Add(a);
+                    q.type = "Escolha Múltipla";
+                    q.question_text = question_text.Text;
 
-                a = new Answer();
-                if (multi_check_3.Checked)
-                    a.score = score;
-                else
-                    a.score = 0;
-                a.answer_text = multi_text_3.Text;
-                a.answer_type = "multi";
-                answers.Add(a);
+                    questions.Add(q);
 
-                a = new Answer();
-                if (multi_check_4.Checked)
-                    a.score = score;
-                else
-                    a.score = 0;
-                a.answer_text = multi_text_4.Text;
-                a.answer_type = "multi";
-                answers.Add(a);
+                    if (multi_check_1.Checked)
+                        checkedBox++;
+                    if (multi_check_2.Checked)
+                        checkedBox++;
+                    if (multi_check_3.Checked)
+                        checkedBox++;
+                    if (multi_check_4.Checked)
+                        checkedBox++;
+
+                    int score = 100 / checkedBox;
+
+                    Answer a = new Answer();
+                    if (multi_check_1.Checked)
+                        a.score = score;
+                    else
+                        a.score = 0;
+                    a.answer_text = multi_text_1.Text;
+                    a.answer_type = "multi";
+                    answers.Add(a);
+
+                    a = new Answer();
+                    if (multi_check_2.Checked)
+                        a.score = score;
+                    else
+                        a.score = 0;
+                    a.answer_text = multi_text_2.Text;
+                    a.answer_type = "multi";
+                    answers.Add(a);
+
+                    a = new Answer();
+                    if (multi_check_3.Checked)
+                        a.score = score;
+                    else
+                        a.score = 0;
+                    a.answer_text = multi_text_3.Text;
+                    a.answer_type = "multi";
+                    answers.Add(a);
+
+                    a = new Answer();
+                    if (multi_check_4.Checked)
+                        a.score = score;
+                    else
+                        a.score = 0;
+                    a.answer_text = multi_text_4.Text;
+                    a.answer_type = "multi";
+                    answers.Add(a);
 
 
-                addQuestions();
+                    addQuestions();
+                    // load add_quizzes again
+                    var show_quizzes = new add_quizes();
+                    show_quizzes.Show();
+                    this.Close();
+                }
+                
             }
-            // load add_quizzes again
-            var show_quizzes = new add_quizes();
-            show_quizzes.Show();
-            this.Close();
         }
 
         private void add_new_question_button_Click(object sender, EventArgs e)
@@ -266,10 +286,6 @@ namespace LingoLearn
                     {
                         currentQ++;
                     }
-
-
-                        
-                    
                 }
             }
             finally
@@ -292,6 +308,7 @@ namespace LingoLearn
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
+                    cmd.Parameters.Add("@quizName", SqlDbType.VarChar, 20).Value = quizName;
                     cmd.Parameters.Add("@creator_id", SqlDbType.Int).Value = login.id;
                     cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = this.designation;
                     cmd.Parameters.Add("@quizType", SqlDbType.VarChar, 20).Value = quizType;

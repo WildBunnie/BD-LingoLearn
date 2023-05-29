@@ -31,9 +31,11 @@ namespace LingoLearn
         private void quiz_list_load(object sender, EventArgs e)
         {
             quiz_load();
+
             dataGridView1.DataSource = list;
             dataGridView1.Columns["Answered"].Visible = false;
             dataGridView1.Columns["Creator"].Visible = false;
+            dataGridView1.Columns["ID"].Visible = false;
 
             foreach (DataGridViewColumn column in dataGridView1.Columns)
             {
@@ -65,6 +67,7 @@ namespace LingoLearn
                             while (reader.Read())
                             {
                                 Quiz q = new Quiz();
+                                q.Name = reader["name"].ToString();
                                 q.Type = reader["type"].ToString();
                                 q.NumberQuestions = reader["n_questions"].ToString();
                                 q.Language = reader["designation"].ToString();
@@ -99,19 +102,26 @@ namespace LingoLearn
 
         private void create_quiz_button_Click(object sender, EventArgs e)
         {
-            if (verbs == true)
+            if ((!radioButton1.Checked && !radioButton2.Checked) || dropdown.SelectedIndex == -1 || quiz_name.TextLength == 0)
             {
-                var add_quiz = new add_quiz("Verbos", quiz_id, dropdown.SelectedItem.ToString());
-                add_quiz.Show();
+                MessageBox.Show("Quiz options missing [Name/Language/Type]!", "Quiz creation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else if (grammar == true)
+            else
             {
-                var add_quiz = new add_quiz("Gramática", quiz_id, dropdown.SelectedItem.ToString());
-                add_quiz.Show();
+                if (verbs == true)
+                {
+                    var add_quiz = new add_quiz(quiz_name.Text, "Verbos", quiz_id, dropdown.SelectedItem.ToString());
+                    add_quiz.Show();
+                }
+                else if (grammar == true)
+                {
+                    var add_quiz = new add_quiz(quiz_name.Text, "Gramática", quiz_id, dropdown.SelectedItem.ToString());
+                    add_quiz.Show();
+                }
+
+
+                this.Close();
             }
-            
-            
-            this.Close();
         }
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)

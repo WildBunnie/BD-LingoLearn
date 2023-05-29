@@ -100,11 +100,11 @@ VALUES
 
 INSERT INTO QUIZ
 VALUES
--- id, type, language(design, code), creator_id(teacherid) (can be null)
-('Verbos', 'Português', 1, NULL),
-('Gramática', 'Português', 1, NULL),
-('Verbos', 'Português', 1, 4),
-('Verbos', 'Português', 1, 4);
+-- name, id, type, language(design, code), creator_id(teacherid) (can be null)
+('Verbos Básicos', 'Verbos', 'Português', 1, NULL),
+('Tradução Básica', 'Gramática', 'Português', 1, NULL),
+('Verbos Avançados', 'Verbos', 'Português', 1, 4),
+('Verbos intermédios', 'Verbos', 'Português', 1, 4);
 
 
 INSERT INTO QUIZES_ANSWERED
