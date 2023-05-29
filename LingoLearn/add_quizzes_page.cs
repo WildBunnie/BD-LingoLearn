@@ -188,7 +188,7 @@ namespace LingoLearn
 
         private void settings_button_Click(object sender, EventArgs e)
         {
-            var frm = new settings();
+            var frm = new settings_teacher();
             frm.Show();
             this.Hide();
         }

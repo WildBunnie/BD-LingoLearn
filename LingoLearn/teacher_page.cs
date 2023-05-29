@@ -53,7 +53,7 @@ namespace LingoLearn
 
         private void settings_button_Click(object sender, EventArgs e)
         {
-            var settings = new settings();
+            var settings = new settings_teacher();
             settings.Show();
             this.Close();
         }

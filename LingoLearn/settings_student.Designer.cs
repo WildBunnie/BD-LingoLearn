@@ -1,7 +1,7 @@
 ﻿
 namespace LingoLearn
 {
-    partial class settings
+    partial class settings_student
     {
         /// <summary>
         /// Required designer variable.
@@ -35,7 +35,7 @@ namespace LingoLearn
             this.button1 = new System.Windows.Forms.Button();
             this.yes_available = new System.Windows.Forms.RadioButton();
             this.no_available = new System.Windows.Forms.RadioButton();
-            this.available_label = new System.Windows.Forms.Label();
+            this.looking_label = new System.Windows.Forms.Label();
             this.availability_panel = new System.Windows.Forms.Panel();
             this.teaches_panel = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
@@ -144,21 +144,21 @@ namespace LingoLearn
             this.no_available.UseVisualStyleBackColor = true;
             this.no_available.CheckedChanged += new System.EventHandler(this.no_available_CheckedChanged);
             // 
-            // available_label
+            // looking_label
             // 
-            this.available_label.AutoSize = true;
-            this.available_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.available_label.Location = new System.Drawing.Point(86, 18);
-            this.available_label.Name = "available_label";
-            this.available_label.Size = new System.Drawing.Size(161, 32);
-            this.available_label.TabIndex = 15;
-            this.available_label.Text = "Availability:";
+            this.looking_label.AutoSize = true;
+            this.looking_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.looking_label.Location = new System.Drawing.Point(86, 18);
+            this.looking_label.Name = "looking_label";
+            this.looking_label.Size = new System.Drawing.Size(266, 32);
+            this.looking_label.TabIndex = 15;
+            this.looking_label.Text = "Looking for teacher:";
             // 
             // availability_panel
             // 
             this.availability_panel.BackColor = System.Drawing.Color.White;
             this.availability_panel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.availability_panel.Controls.Add(this.available_label);
+            this.availability_panel.Controls.Add(this.looking_label);
             this.availability_panel.Controls.Add(this.no_available);
             this.availability_panel.Controls.Add(this.yes_available);
             this.availability_panel.Location = new System.Drawing.Point(12, 165);
@@ -182,9 +182,9 @@ namespace LingoLearn
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(285, 19);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(267, 32);
+            this.label1.Size = new System.Drawing.Size(270, 32);
             this.label1.TabIndex = 15;
-            this.label1.Text = "Teaches Language:";
+            this.label1.Text = "Learning Language:";
             // 
             // language_panel
             // 
@@ -379,7 +379,7 @@ namespace LingoLearn
             this.label2.TabIndex = 17;
             this.label2.Text = "Are you certain that you want to delete your account?";
             // 
-            // settings
+            // settings_student
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -393,7 +393,7 @@ namespace LingoLearn
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.change_pass_panel);
             this.Controls.Add(this.delete_account_panel);
-            this.Name = "settings";
+            this.Name = "settings_student";
             this.Text = "Settings";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.availability_panel.ResumeLayout(false);
@@ -417,7 +417,7 @@ namespace LingoLearn
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.RadioButton yes_available;
         private System.Windows.Forms.RadioButton no_available;
-        private System.Windows.Forms.Label available_label;
+        private System.Windows.Forms.Label looking_label;
         private System.Windows.Forms.Panel availability_panel;
         private System.Windows.Forms.Panel teaches_panel;
         private System.Windows.Forms.Label label1;

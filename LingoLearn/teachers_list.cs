@@ -24,7 +24,6 @@ namespace LingoLearn
         {
             loadTeachers();
             teacher_table.DataSource = teacher_list;
-            teacher_table.Columns["CountryCode"].Visible = false;
             foreach (DataGridViewColumn column in teacher_table.Columns)
             {
                 column.SortMode = DataGridViewColumnSortMode.NotSortable;

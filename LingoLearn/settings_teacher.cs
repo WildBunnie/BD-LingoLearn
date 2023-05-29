@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace LingoLearn
 {
-    public partial class settings : Form
+    public partial class settings_teacher : Form
     {
         String available;
         int languagesNumber = 6;
@@ -21,7 +21,7 @@ namespace LingoLearn
         SqlConnection cn = startpage.cn;
 
 
-        public settings()
+        public settings_teacher()
         {
             InitializeComponent();
             availability_load();

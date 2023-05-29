@@ -270,6 +270,19 @@ CREATE PROCEDURE getAvailability (@id int)
 AS
 	SELECT available FROM TEACHER
 	WHERE id = @id
+
+	SELECT looking_for_teacher FROM LEARNER
+	WHERE id = @id
+GO
+
+DROP PROC IF EXISTS getAvailabilityStudent
+USE [LingoLearn]
+GO
+
+CREATE PROCEDURE getAvailabilityStudent (@id int)
+AS
+	SELECT looking_for_teacher FROM LEARNER
+	WHERE id = @id
 GO
 
 
@@ -282,7 +295,12 @@ AS
 	UPDATE "TEACHER"
 	SET available = @bool
 	WHERE id = @id
+
+	UPDATE "LEARNER"
+	SET looking_for_teacher = @bool
+	WHERE id = @id
 GO
+
 
 
 DROP PROC IF EXISTS deleteUser
@@ -312,6 +330,9 @@ BEGIN
 	WHERE creator_id = @id
 
 	DELETE FROM TEACHER
+	WHERE id = @id
+
+	DELETE FROM LEARNER
 	WHERE id = @id
 
 	DELETE FROM "USER"
@@ -364,6 +385,17 @@ AS
 	VALUES (@designation, @id)
 GO
 
+DROP PROC IF EXISTS learnLanguage
+USE [LingoLearn]
+GO
+
+CREATE PROCEDURE learnLanguage (@id int, @designation VARCHAR(40))
+AS
+	INSERT INTO LEARNING
+	VALUES (@id, @designation)
+GO
+
+
 
 DROP PROC IF EXISTS removeLanguage
 USE [LingoLearn]
@@ -373,6 +405,17 @@ CREATE PROCEDURE removeLanguage (@id int, @designation VARCHAR(40))
 AS
 	DELETE FROM TEACHES_LANGUAGE WHERE teacher_id = @id AND designation = @designation
 GO
+
+DROP PROC IF EXISTS removeLearning
+USE [LingoLearn]
+GO
+
+CREATE PROCEDURE removeLearning (@id int, @designation VARCHAR(40))
+AS
+	DELETE FROM LEARNING WHERE user_id = @id AND designation = @designation
+GO
+
+
 
 DROP TRIGGER IF EXISTS deleteUserLanguageFromEverything
 USE [LingoLearn]

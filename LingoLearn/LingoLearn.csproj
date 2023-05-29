@@ -52,11 +52,17 @@
     <Compile Include="answer_quiz.Designer.cs">
       <DependentUpon>answer_quiz.cs</DependentUpon>
     </Compile>
-    <Compile Include="settings.cs">
+    <Compile Include="settings_student.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="settings.Designer.cs">
-      <DependentUpon>settings.cs</DependentUpon>
+    <Compile Include="settings_student.Designer.cs">
+      <DependentUpon>settings_student.cs</DependentUpon>
+    </Compile>
+    <Compile Include="settings_teacher.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="settings_teacher.Designer.cs">
+      <DependentUpon>settings_teacher.cs</DependentUpon>
     </Compile>
     <Compile Include="leaderboards.cs">
       <SubType>Form</SubType>
@@ -133,11 +139,14 @@
     <EmbeddedResource Include="answer_quiz.resx">
       <DependentUpon>answer_quiz.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="settings_student.resx">
+      <DependentUpon>settings_student.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="startpage.resx">
       <DependentUpon>startpage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="settings.resx">
-      <DependentUpon>settings.cs</DependentUpon>
+    <EmbeddedResource Include="settings_teacher.resx">
+      <DependentUpon>settings_teacher.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="leaderboards.resx">
       <DependentUpon>leaderboards.cs</DependentUpon>
