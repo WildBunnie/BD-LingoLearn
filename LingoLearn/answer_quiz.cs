@@ -42,7 +42,7 @@ namespace LingoLearn
 
             Question q = questions[current];
             question_label.Text = q.text;
-            if (q.type.Equals("Escolha Múltipla"))
+            if (q.type.Equals("Multi-choice"))
             {
                 hide_textbox();
                 next_question_button.Visible = true;
@@ -90,8 +90,7 @@ namespace LingoLearn
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add("@user_id", SqlDbType.Int).Value = login.id;
-                    cmd.Parameters.Add("@question_id", SqlDbType.Int).Value = ua.question_id;
-                    cmd.Parameters.Add("@text", SqlDbType.VarChar, 500).Value = ua.text;
+                    cmd.Parameters.Add("@answer_id", SqlDbType.Int).Value = ua.AnswerID;
 
                     cn.Open();
                     cmd.ExecuteNonQuery();
@@ -126,7 +125,7 @@ namespace LingoLearn
             List<String> text = new List<String>();
             int q_score = 0;
 
-            if (questions[current].type.Equals("Escolha Múltipla"))
+            if (questions[current].type.Equals("Multi-choice"))
             {
                 if (!checkBox1.Checked && !checkBox2.Checked && !checkBox3.Checked && !checkBox4.Checked)
                     return;
@@ -200,7 +199,7 @@ namespace LingoLearn
                 if (String.IsNullOrEmpty(answer_translate_text_box.Text))
                     return;
 
-                if (answer_translate_text_box.Text.Equals(questions[current].answers[0].text))
+                if (answer_translate_text_box.Text.ToLower().Equals(questions[current].answers[0].text.ToLower()))
                     q_score = questions[current].answers[0].score;
                 if (q_score == 100)
                 {
@@ -221,10 +220,11 @@ namespace LingoLearn
             if (text.Count == 0)
                 return;
 
-            foreach (String t in text)
+            for(int i = 0; i<text.Count; i++)
             {
+                String t = text[i];
                 UserAnswer ua = new UserAnswer();
-                ua.question_id = questions[current].question_id;
+                ua.AnswerID = questions[current].answers[i].ID;
                 ua.text = t;
                 user_answers.Add(ua);
             }
@@ -236,6 +236,6 @@ namespace LingoLearn
     public class UserAnswer
     {
         public String text { get; set; }
-        public int question_id { get; set; }
+        public int AnswerID { get; set; }
     }
 }

@@ -92,9 +92,8 @@ namespace LingoLearn
 
         private void add_quizzes_button_Click(object sender, EventArgs e)
         {
-            var view_students = new students_list();
-            view_students.Show();
-            this.Close();
+            utils.loadForm(this, new students_list());
+
         }
 
         private void create_quiz_button_Click(object sender, EventArgs e)
@@ -107,12 +106,12 @@ namespace LingoLearn
             {
                 if (verbs == true)
                 {
-                    var add_quiz = new add_quiz(quiz_name.Text, "Verbos", quiz_id, dropdown.SelectedItem.ToString());
+                    var add_quiz = new add_quiz(quiz_name.Text, "Verbs", quiz_id, dropdown.SelectedItem.ToString());
                     add_quiz.Show();
                 }
                 else if (grammar == true)
                 {
-                    var add_quiz = new add_quiz(quiz_name.Text, "Gramática", quiz_id, dropdown.SelectedItem.ToString());
+                    var add_quiz = new add_quiz(quiz_name.Text, "Grammar", quiz_id, dropdown.SelectedItem.ToString());
                     add_quiz.Show();
                 }
 
@@ -169,28 +168,17 @@ namespace LingoLearn
 
         private void homepage_button_Click(object sender, EventArgs e)
         {
-            var frm = new Form();
-            frm = new teacher_page();
-            frm.Location = this.Location;
-            frm.StartPosition = FormStartPosition.Manual;
-            frm.Show();
-            this.Hide();
+            utils.loadForm(this, new teacher_page());
         }
 
         private void leaderboards_button_Click(object sender, EventArgs e)
         {
-            var frm = new leaderboards();
-            frm.Location = this.Location;
-            frm.StartPosition = FormStartPosition.Manual;
-            frm.Show();
-            this.Close();
+            utils.loadForm(this, new leaderboards());
         }
 
         private void settings_button_Click(object sender, EventArgs e)
         {
-            var frm = new settings_teacher();
-            frm.Show();
-            this.Hide();
+            utils.loadForm(this, new settings_teacher());
         }
     }
 

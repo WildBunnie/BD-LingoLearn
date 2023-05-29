@@ -47,7 +47,7 @@ namespace LingoLearn
                 {
                     Question q = new Question();
 
-                    q.type = "Tradução";
+                    q.type = "Translation";
                     q.question_text = question_text.Text;
 
                     questions.Add(q);
@@ -79,7 +79,7 @@ namespace LingoLearn
                     int checkedBox = 0;
                     Question q = new Question();
 
-                    q.type = "Escolha Múltipla";
+                    q.type = "Multi-choice";
                     q.question_text = question_text.Text;
 
                     questions.Add(q);
@@ -150,7 +150,7 @@ namespace LingoLearn
                 {
                     Question q = new Question();
 
-                    q.type = "Tradução";
+                    q.type = "Translation";
                     q.question_text = question_text.Text;
 
                     questions.Add(q);
@@ -172,7 +172,7 @@ namespace LingoLearn
                     int checkedBox = 0;
                     Question q = new Question();
 
-                    q.type = "Escolha Múltipla";
+                    q.type = "Multi-choice";
                     q.question_text = question_text.Text;
 
                     questions.Add(q);

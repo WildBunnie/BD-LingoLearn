@@ -31,7 +31,7 @@ namespace LingoLearn
         {
             this.add_quizzes_button = new System.Windows.Forms.Button();
             this.leaderboards_button = new System.Windows.Forms.Button();
-            this.settings_button = new System.Windows.Forms.Button();
+            this.homepage_button = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -57,15 +57,15 @@ namespace LingoLearn
             this.leaderboards_button.UseVisualStyleBackColor = true;
             this.leaderboards_button.Click += new System.EventHandler(this.leaderboards_button_Click);
             // 
-            // settings_button
+            // homepage_button
             // 
-            this.settings_button.Location = new System.Drawing.Point(588, 29);
-            this.settings_button.Name = "settings_button";
-            this.settings_button.Size = new System.Drawing.Size(282, 50);
-            this.settings_button.TabIndex = 2;
-            this.settings_button.Text = "Settings";
-            this.settings_button.UseVisualStyleBackColor = true;
-            this.settings_button.Click += new System.EventHandler(this.settings_button_Click);
+            this.homepage_button.Location = new System.Drawing.Point(588, 29);
+            this.homepage_button.Name = "homepage_button";
+            this.homepage_button.Size = new System.Drawing.Size(282, 50);
+            this.homepage_button.TabIndex = 2;
+            this.homepage_button.Text = "Homepage";
+            this.homepage_button.UseVisualStyleBackColor = true;
+            this.homepage_button.Click += new System.EventHandler(this.homepage_button_Click);
             // 
             // dataGridView1
             // 
@@ -104,7 +104,7 @@ namespace LingoLearn
             this.ClientSize = new System.Drawing.Size(882, 553);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.settings_button);
+            this.Controls.Add(this.homepage_button);
             this.Controls.Add(this.leaderboards_button);
             this.Controls.Add(this.add_quizzes_button);
             this.Name = "students_list";
@@ -120,7 +120,7 @@ namespace LingoLearn
 
         private System.Windows.Forms.Button add_quizzes_button;
         private System.Windows.Forms.Button leaderboards_button;
-        private System.Windows.Forms.Button settings_button;
+        private System.Windows.Forms.Button homepage_button;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Label label1;
     }

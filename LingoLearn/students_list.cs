@@ -74,25 +74,20 @@ namespace LingoLearn
 
         private void add_quizzes_button_Click(object sender, EventArgs e)
         {
-            var add_quizzes = new add_quizes();
-            add_quizzes.Show();
-            this.Close();
+            utils.loadForm(this, new add_quizes());
+
         }
 
         private void leaderboards_button_Click(object sender, EventArgs e)
         {
-            var frm = new leaderboards();
-            frm.Location = this.Location;
-            frm.StartPosition = FormStartPosition.Manual;
-            frm.Show();
-            this.Close();
+            utils.loadForm(this, new leaderboards());
+
         }
 
-        private void settings_button_Click(object sender, EventArgs e)
+        private void homepage_button_Click(object sender, EventArgs e)
         {
-            var frm = new settings_teacher();
-            frm.Show();
-            this.Hide();
+            utils.loadForm(this, new teacher_page());
+
         }
     }
     public class Student

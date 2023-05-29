@@ -118,7 +118,7 @@ AS
 
 	SELECT user_id, quiz_id, sum(score) as score
 		INTO #temp_score
-		FROM (ANSWERS JOIN ANSWER ON ANSWERS.question_id = ANSWER.question_id AND ANSWERS.text = ANSWER.text) JOIN QUESTION ON QUESTION.id=ANSWER.question_id
+		FROM (ANSWERS JOIN ANSWER ON ANSWERS.answer_id = ANSWER.id) JOIN QUESTION ON QUESTION.id=ANSWER.question_id
 		GROUP BY ANSWERS.user_id, QUESTION.quiz_id
 		HAVING user_id=@user_id
 
@@ -150,10 +150,10 @@ GO
 DROP PROC IF EXISTS setUserAnswer
 USE [LingoLearn]
 GO
-CREATE PROC setUserAnswer (@user_id int, @question_id int, @text varchar(500))
+CREATE PROC setUserAnswer (@user_id int, @answer_id int)
 AS
 	INSERT INTO ANSWERS VALUES
-	(@user_id, @text, @question_id)
+	(@user_id, @answer_id)
 GO
 
 DROP PROC IF EXISTS getQuizQuestions
@@ -161,7 +161,7 @@ USE [LingoLearn]
 GO
 CREATE PROC getQuizQuestions (@quiz_id int)
 AS
-	SELECT quiz_id, id as question_id, question_text, text as answer, type, designation, score
+	SELECT quiz_id, QUESTION.id as question_id, question_text, text as answer, type, designation, score, ANSWER.id as answer_id
 		FROM QUESTION JOIN ANSWER ON QUESTION.id=ANSWER.question_id
 		WHERE quiz_id=@quiz_id
 GO
@@ -357,9 +357,9 @@ GO
 CREATE PROC getLeaderboard
 AS
 	SELECT "USER".id, "USER".username, ISNULL(SUM(score),0) as score
-		FROM "USER" LEFT OUTER JOIN (ANSWERS JOIN ANSWER ON ANSWERS.question_id=ANSWER.question_id) ON "USER".id = ANSWERS.user_id
+		FROM "USER" LEFT OUTER JOIN (ANSWERS JOIN ANSWER ON ANSWERS.answer_id=ANSWER.id) ON "USER".id = ANSWERS.user_id
 		WHERE EXISTS (SELECT id FROM LEARNER WHERE LEARNER.id = "USER".id)
-		GROUP BY id, "USER".username
+		GROUP BY "USER".id, "USER".username
 		ORDER BY score DESC
 GO
 
