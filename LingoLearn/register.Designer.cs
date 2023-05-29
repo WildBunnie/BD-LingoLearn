@@ -38,8 +38,8 @@ namespace LingoLearn
             this.name_textbox = new System.Windows.Forms.TextBox();
             this.name_label = new System.Windows.Forms.Label();
             this.teacher_or_student_label = new System.Windows.Forms.Label();
-            this.student_checkbox = new System.Windows.Forms.CheckBox();
-            this.teacher_checkbox = new System.Windows.Forms.CheckBox();
+            this.teacher_radio = new System.Windows.Forms.RadioButton();
+            this.student_radio = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
             // email_textbox
@@ -145,33 +145,35 @@ namespace LingoLearn
             this.teacher_or_student_label.TabIndex = 8;
             this.teacher_or_student_label.Text = "You are a:";
             // 
-            // student_checkbox
+            // teacher_radio
             // 
-            this.student_checkbox.AutoSize = true;
-            this.student_checkbox.Location = new System.Drawing.Point(329, 407);
-            this.student_checkbox.Name = "student_checkbox";
-            this.student_checkbox.Size = new System.Drawing.Size(79, 21);
-            this.student_checkbox.TabIndex = 11;
-            this.student_checkbox.Text = "Student";
-            this.student_checkbox.UseVisualStyleBackColor = true;
+            this.teacher_radio.AutoSize = true;
+            this.teacher_radio.Location = new System.Drawing.Point(485, 406);
+            this.teacher_radio.Name = "teacher_radio";
+            this.teacher_radio.Size = new System.Drawing.Size(82, 21);
+            this.teacher_radio.TabIndex = 13;
+            this.teacher_radio.TabStop = true;
+            this.teacher_radio.Text = "Teacher";
+            this.teacher_radio.UseVisualStyleBackColor = true;
             // 
-            // teacher_checkbox
+            // student_radio
             // 
-            this.teacher_checkbox.AutoSize = true;
-            this.teacher_checkbox.Location = new System.Drawing.Point(484, 407);
-            this.teacher_checkbox.Name = "teacher_checkbox";
-            this.teacher_checkbox.Size = new System.Drawing.Size(83, 21);
-            this.teacher_checkbox.TabIndex = 12;
-            this.teacher_checkbox.Text = "Teacher";
-            this.teacher_checkbox.UseVisualStyleBackColor = true;
+            this.student_radio.AutoSize = true;
+            this.student_radio.Location = new System.Drawing.Point(328, 406);
+            this.student_radio.Name = "student_radio";
+            this.student_radio.Size = new System.Drawing.Size(78, 21);
+            this.student_radio.TabIndex = 14;
+            this.student_radio.TabStop = true;
+            this.student_radio.Text = "Student";
+            this.student_radio.UseVisualStyleBackColor = true;
             // 
             // register
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(882, 553);
-            this.Controls.Add(this.teacher_checkbox);
-            this.Controls.Add(this.student_checkbox);
+            this.Controls.Add(this.student_radio);
+            this.Controls.Add(this.teacher_radio);
             this.Controls.Add(this.teacher_or_student_label);
             this.Controls.Add(this.name_label);
             this.Controls.Add(this.name_textbox);
@@ -200,8 +202,8 @@ namespace LingoLearn
         private System.Windows.Forms.TextBox name_textbox;
         private System.Windows.Forms.Label name_label;
         private System.Windows.Forms.Label teacher_or_student_label;
-        private System.Windows.Forms.CheckBox student_checkbox;
-        private System.Windows.Forms.CheckBox teacher_checkbox;
+        private System.Windows.Forms.RadioButton teacher_radio;
+        private System.Windows.Forms.RadioButton student_radio;
     }
 }
 

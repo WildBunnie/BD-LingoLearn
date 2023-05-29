@@ -24,11 +24,13 @@ namespace LingoLearn
             String name = name_textbox.Text;
             String email = email_textbox.Text;
             String password = password_textbox.Text;
+
             int isStudent = 0, isTeacher = 0;
-            if (student_checkbox.Checked)
+            if (student_radio.Checked)
                 isStudent = 1;
-            if (teacher_checkbox.Checked)
+            else if (teacher_radio.Checked)
                 isTeacher = 1;
+
             String errorMessage;
 
             if (String.IsNullOrEmpty(email) || String.IsNullOrEmpty(password) || String.IsNullOrEmpty(name))

@@ -29,6 +29,7 @@ namespace LingoLearn
             String email = email_textbox.Text;
             String password = password_textbox.Text;
             String errorMessage;
+
             if (String.IsNullOrEmpty(email) || String.IsNullOrEmpty(password))
             {
                 errorMessage = "All fields must be filled";
@@ -52,104 +53,67 @@ namespace LingoLearn
         private void user_login(String email, String password)
         {
             SqlConnection cn = homepage.cn;
-            try
+            using (SqlCommand cmd = new SqlCommand("userFromCredentials", cn))
             {
-                using (SqlCommand cmd = new SqlCommand("userFromCredentials", cn))
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.Add("@email", SqlDbType.VarChar, 40).Value = email;
+                cmd.Parameters.Add("@password", SqlDbType.VarChar, 40).Value = password;
+
+                cmd.Parameters.Add("@id", SqlDbType.Int).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("@username", SqlDbType.VarChar, 40).Direction = ParameterDirection.Output;
+
+                cmd.Parameters.Add("@returnValue", SqlDbType.Int).Direction = ParameterDirection.ReturnValue;
+
+                cn.Open();
+                cmd.ExecuteNonQuery();
+                cn.Close();
+
+                int result = Convert.ToInt32(cmd.Parameters["@returnValue"].Value);
+
+                // -1 means the email is not in the database
+                if (result == -1)
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.Add("@email", SqlDbType.VarChar, 40).Value = email;
-                    cmd.Parameters.Add("@password", SqlDbType.VarChar, 40).Value = password;
-
-                    cmd.Parameters.Add("@id", SqlDbType.Int).Direction = ParameterDirection.Output;
-                    cmd.Parameters.Add("@username", SqlDbType.VarChar, 40).Direction = ParameterDirection.Output;
-
-                    cmd.Parameters.Add("@returnValue", SqlDbType.Int).Direction = ParameterDirection.ReturnValue;
-
-                    cn.Open();
-                    cmd.ExecuteNonQuery();
-                    cn.Close();
-
-                    int result = Convert.ToInt32(cmd.Parameters["@returnValue"].Value);
-
-                    // -1 means the email is not in the database
-                    if (result == -1)
-                    {
-                        MessageBox.Show("no account is registered with that email", "invalid email", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    // -2 means the email is in the database but the password does not match
-                    else if (result == -2)
-                    {
-                        MessageBox.Show("incorrect password", "incorrect password", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    // 1 means the password and email match
-                    else if (result == 1)
-                    {
-                        login.id = Convert.ToInt32(cmd.Parameters["@id"].Value);
-                        login.username = Convert.ToString(cmd.Parameters["@username"].Value);
-
-                        MessageBox.Show("logged in as " + String.Format("{0}#{1}", login.username, id), "login sucessfull", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                        login.role = isTeacherOrStudent(login.id);
-
-                        var frm = new Form();
-                        switch (login.role)
-                        {
-                            case 1:
-                                frm = new student_page();
-                                break;
-                            case 2:
-                                frm = new teacher_page();
-                                break;
-                            case 3:
-                                frm = new student_teacher_page();
-                                break;
-                        }
-                        frm.Location = this.Location;
-                        frm.StartPosition = FormStartPosition.Manual;
-                        frm.Show();
-                        this.Hide();
-                    }
+                    MessageBox.Show("no account is registered with that email", "invalid email", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-            }
-            finally
-            {
-                if (cn.State != ConnectionState.Closed)
+                // -2 means the email is in the database but the password does not match
+                else if (result == -2)
                 {
-                    cn.Close();
+                    MessageBox.Show("incorrect password", "incorrect password", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                // 1 means the password and email match
+                else if (result == 1)
+                {
+                    login.id = Convert.ToInt32(cmd.Parameters["@id"].Value);
+                    login.username = Convert.ToString(cmd.Parameters["@username"].Value);
+                    login.role = isTeacherOrStudent(login.id);
+
+                    MessageBox.Show("logged in as " + String.Format("{0}#{1}", login.username, id), "login sucessfull", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    utils.loadForm(this, utils.getPageFromRole());
                 }
             }
         }
 
+
         private int isTeacherOrStudent(int id)
         {
             SqlConnection cn = homepage.cn;
-            try
+            using (SqlCommand cmd = new SqlCommand("isTeacherOrStudent", cn))
             {
-                using (SqlCommand cmd = new SqlCommand("isTeacherOrStudent", cn))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandType = CommandType.StoredProcedure;
 
-                    cmd.Parameters.Add("@id", SqlDbType.Int).Value = id;
+                cmd.Parameters.Add("@id", SqlDbType.Int).Value = id;
+                cmd.Parameters.Add("@returnValue", SqlDbType.Int).Direction = ParameterDirection.ReturnValue;
 
-                    cmd.Parameters.Add("@returnValue", SqlDbType.Int).Direction = ParameterDirection.ReturnValue;
+                cn.Open();
+                cmd.ExecuteNonQuery();
+                cn.Close();
 
-                    cn.Open();
-                    cmd.ExecuteNonQuery();
-                    cn.Close();
+                int result = Convert.ToInt32(cmd.Parameters["@returnValue"].Value);
 
-                    int result = Convert.ToInt32(cmd.Parameters["@returnValue"].Value);
-
-                    // 0 means neither, 1 means learner, 2 means teacher, 3 means both
-                    return result;
-                }
-            }
-            finally
-            {
-                if (cn.State != ConnectionState.Closed)
-                {
-                    cn.Close();
-                }
+                // 0 means neither, 1 means learner, 2 means teacher
+                return result;
             }
         }
 

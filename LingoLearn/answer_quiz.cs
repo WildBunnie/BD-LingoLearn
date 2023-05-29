@@ -43,12 +43,16 @@ namespace LingoLearn
             if (q.type.Equals("Escolha Múltipla"))
             {
                 hide_textbox();
-                next_question_button.Visible = false;
-                
-                answer1_button.Text = q.answers[0].text;
-                answer2_button.Text = q.answers[1].text;
-                answer3_button.Text = q.answers[2].text;
-                answer4_button.Text = q.answers[3].text;
+                next_question_button.Visible = true;
+
+                checkBox1.Text = q.answers[0].text;
+                checkBox2.Text = q.answers[1].text;
+                checkBox3.Text = q.answers[2].text;
+                checkBox4.Text = q.answers[3].text;
+                checkBox1.Checked = false;
+                checkBox2.Checked = false;
+                checkBox3.Checked = false;
+                checkBox4.Checked = false;
             }
             else
             {
@@ -102,91 +106,132 @@ namespace LingoLearn
 
         private void hide_buttons()
         {
-            answer1_button.Visible = false;
-            answer2_button.Visible = false;
-            answer3_button.Visible = false;
-            answer4_button.Visible = false;
+            checkBox1.Visible = false;
+            checkBox2.Visible = false;
+            checkBox3.Visible = false;
+            checkBox4.Visible = false;
             answer_translate_text_box.Visible = true;
         }
 
         private void hide_textbox()
         {
-            answer1_button.Visible = true;
-            answer2_button.Visible = true;
-            answer3_button.Visible = true;
-            answer4_button.Visible = true;
+            checkBox1.Visible = true;
+            checkBox2.Visible = true;
+            checkBox3.Visible = true;
+            checkBox4.Visible = true;
             answer_translate_text_box.Visible = false;
         }
 
         private void next_question_button_Click(object sender, EventArgs e)
         {
-            if (String.IsNullOrEmpty(answer_translate_text_box.Text))
-                return;
 
+            List<String> text = new List<String>();
             int q_score = 0;
-            if (answer_translate_text_box.Text.Equals(questions[current].answers[0].text))
-                q_score = questions[current].answers[0].score;
-            score += q_score;
-            String text = null;
-            if(q_score == 100)
+
+            if (questions[current].type.Equals("Escolha Múltipla"))
             {
-                text = questions[current].answers[0].text;
+                if (!checkBox1.Checked && !checkBox2.Checked && !checkBox3.Checked && !checkBox4.Checked)
+                    return;
+
+                bool done = false;
+
+                if (checkBox1.Checked && !done)
+                {
+                    int score = questions[current].answers[0].score;
+                    if(score == 0)
+                    {
+                        q_score = 0;
+                        done = true;
+                        text.Clear();
+                    }
+                    else
+                    {
+                        q_score += score;
+                    }
+                    text.Add(questions[current].answers[0].text);
+                }
+                if (checkBox2.Checked && !done)
+                {
+                    int score = questions[current].answers[1].score;
+                    if (score == 0)
+                    {
+                        q_score = 0;
+                        done = true;
+                        text.Clear();
+                    }
+                    else
+                    {
+                        q_score += score;
+                    }
+                    text.Add(questions[current].answers[1].text);
+                }
+                if (checkBox3.Checked && !done)
+                {
+                    int score = questions[current].answers[2].score;
+                    if (score == 0)
+                    {
+                        q_score = 0;
+                        done = true;
+                        text.Clear();
+                    }
+                    else
+                    {
+                        q_score += score;
+                    }
+                    text.Add(questions[current].answers[2].text);
+                }
+                if (checkBox4.Checked && !done)
+                {
+                    int score = questions[current].answers[3].score;
+                    if (score == 0)
+                    {
+                        q_score = 0;
+                        done = true;
+                        text.Clear();
+                    }
+                    else
+                    {
+                        q_score += score;
+                    }
+                    text.Add(questions[current].answers[3].text);
+                }
+
             }
+            else
+            {
+                if (String.IsNullOrEmpty(answer_translate_text_box.Text))
+                    return;
+
+                if (answer_translate_text_box.Text.Equals(questions[current].answers[0].text))
+                    q_score = questions[current].answers[0].score;
+                if (q_score == 100)
+                {
+                    text.Add(questions[current].answers[0].text);
+                }
+            }
+            score += q_score;
             answer(q_score, text);            
             next();
         }
 
-        private void answer(int q_score, String text)
+        private void answer(int q_score, List<String> text)
         {
             MessageBox.Show("You got a score of " + q_score.ToString() + " on this question", "Question Score", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             // this is here because we don't add translation answers
             // if the response is incorrect
-            if (text == null)
+            if (text.Count == 0)
                 return;
 
-            UserAnswer ua = new UserAnswer();
-            ua.question_id = questions[current].question_id;
-            ua.text = text;
-            user_answers.Add(ua);
-        }
+            foreach (String t in text)
+            {
+                UserAnswer ua = new UserAnswer();
+                ua.question_id = questions[current].question_id;
+                ua.text = t;
+                user_answers.Add(ua);
+            }
 
-        private void answer1_button_Click(object sender, EventArgs e)
-        {
-            int q_score = 0;
-            q_score = questions[current].answers[0].score;
-            score += q_score;
-            answer(q_score, questions[current].answers[0].text);
-            next();
         }
-
-        private void answer2_button_Click(object sender, EventArgs e)
-        {
-            int q_score = 0;
-            q_score = questions[current].answers[1].score;
-            score += q_score;
-            answer(q_score, questions[current].answers[1].text);
-            next();
-        }
-
-        private void answer3_button_Click(object sender, EventArgs e)
-        {
-            int q_score = 0;
-            q_score = questions[current].answers[2].score;
-            score += q_score;
-            answer(q_score, questions[current].answers[2].text);
-            next();
-        }
-
-        private void answer4_button_Click(object sender, EventArgs e)
-        {
-            int q_score = 0;
-            q_score = questions[current].answers[3].score;
-            score += q_score;
-            answer(q_score, questions[current].answers[3].text);
-            next();
-        }
-
 
     }
 

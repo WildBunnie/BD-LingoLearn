@@ -41,7 +41,7 @@ namespace LingoLearn
                 using (SqlCommand cmd = new SqlCommand("getQuizes", cn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    //cmd.Parameters.Add("@user_id", SqlDbType.Int).Value = login.id;
+                    cmd.Parameters.Add("@user_id", SqlDbType.Int).Value = login.id;
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
@@ -55,6 +55,7 @@ namespace LingoLearn
                                 q.Answered = "False";
 
                                 q.Type = reader["type"].ToString();
+                                q.Name = reader["name"].ToString();
 
                                 if (reader["teacher_name"] != DBNull.Value)
                                     q.Creator = reader["teacher_name"].ToString();
@@ -109,7 +110,7 @@ namespace LingoLearn
                 {
                     int index = row.Index;
                     SqlConnection cn = homepage.cn;
-                    if (dataGridView1.Rows[index].Cells[2].Value.ToString().Equals("True"))
+                    if (dataGridView1.Rows[index].Cells[3].Value.ToString().Equals("True"))
                     {
                         using (SqlCommand cmd = new SqlCommand("getScore", cn))
                         {
@@ -196,10 +197,7 @@ namespace LingoLearn
         private void homepage_button_Click(object sender, EventArgs e)
         {
             var frm = new Form();
-            if (login.role == 3)
-                frm = new student_teacher_page();
-            else
-                frm = new student_page();
+            frm = new student_page();
             frm.Location = this.Location;
             frm.StartPosition = FormStartPosition.Manual;
             frm.Show();

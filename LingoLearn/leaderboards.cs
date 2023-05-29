@@ -60,9 +60,7 @@ namespace LingoLearn
         private void homepage_button_Click(object sender, EventArgs e)
         {
             var frm = new Form();
-            if (login.role == 3)
-                frm = new student_teacher_page();
-            else if (login.role == 2)
+            if (login.role == 2)
                 frm = new teacher_page();
             else
                 frm = new student_page();
