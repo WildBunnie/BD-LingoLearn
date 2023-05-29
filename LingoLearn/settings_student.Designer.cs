@@ -387,12 +387,12 @@ namespace LingoLearn
             this.Controls.Add(this.button1);
             this.Controls.Add(this.settings_button);
             this.Controls.Add(this.homepage_button);
+            this.Controls.Add(this.change_pass_panel);
+            this.Controls.Add(this.delete_account_panel);
             this.Controls.Add(this.language_panel);
             this.Controls.Add(this.teaches_panel);
             this.Controls.Add(this.availability_panel);
             this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.change_pass_panel);
-            this.Controls.Add(this.delete_account_panel);
             this.Name = "settings_student";
             this.Text = "Settings";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();

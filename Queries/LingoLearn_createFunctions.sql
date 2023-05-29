@@ -209,11 +209,22 @@ GO
 DROP PROC IF EXISTS getDesignations
 USE [LingoLearn]
 GO
-CREATE PROCEDURE getDesignations (@id int)
+CREATE PROCEDURE getDesignations (@id int, @user_role int)
 AS
-	SELECT designation FROM TEACHER 
-	JOIN TEACHES_LANGUAGE ON id = teacher_id 
-	WHERE id = @id
+BEGIN
+	IF (@user_role = 2)
+		BEGIN
+		SELECT designation FROM TEACHER 
+		JOIN TEACHES_LANGUAGE ON id = teacher_id 
+		WHERE id = @id
+		END
+	ELSE
+		BEGIN
+		SELECT designation FROM "USER" 
+		JOIN LEARNING ON id = user_id 
+		WHERE id = @id
+		END
+END
 GO
 
 

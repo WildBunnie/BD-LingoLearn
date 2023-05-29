@@ -14,8 +14,6 @@ namespace LingoLearn
     public partial class settings_teacher : Form
     {
         String available;
-        int languagesNumber = 6;
-        String designation;
         bool loaded = false;
 
         SqlConnection cn = startpage.cn;
@@ -79,6 +77,7 @@ namespace LingoLearn
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
+                    cmd.Parameters.Add("@user_role", SqlDbType.Int).Value = login.role;
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {

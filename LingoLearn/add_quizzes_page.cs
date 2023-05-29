@@ -142,6 +142,7 @@ namespace LingoLearn
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
+                    cmd.Parameters.Add("@user_role", SqlDbType.Int).Value = login.role;
                     cmd.ExecuteNonQuery();
 
                     using (SqlDataReader reader = cmd.ExecuteReader())

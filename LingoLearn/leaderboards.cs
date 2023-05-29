@@ -72,7 +72,10 @@ namespace LingoLearn
 
         private void settings_button_Click(object sender, EventArgs e)
         {
-            utils.loadForm(this, new settings_teacher());
+            if (login.role == 2)
+                utils.loadForm(this, new settings_teacher());
+            else
+                utils.loadForm(this, new settings_student());
         }
     }
 
