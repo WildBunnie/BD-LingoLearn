@@ -55,6 +55,7 @@ namespace LingoLearn
             this.cancel_deletion_button = new System.Windows.Forms.Button();
             this.delete_button = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
+            this.logout_button = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.availability_panel.SuspendLayout();
             this.teaches_panel.SuspendLayout();
@@ -99,7 +100,7 @@ namespace LingoLearn
             // settings_button
             // 
             this.settings_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.settings_button.Location = new System.Drawing.Point(257, 100);
+            this.settings_button.Location = new System.Drawing.Point(12, 100);
             this.settings_button.Name = "settings_button";
             this.settings_button.Size = new System.Drawing.Size(187, 50);
             this.settings_button.TabIndex = 11;
@@ -110,9 +111,9 @@ namespace LingoLearn
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(450, 100);
+            this.button1.Location = new System.Drawing.Point(205, 100);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(187, 50);
+            this.button1.Size = new System.Drawing.Size(188, 50);
             this.button1.TabIndex = 12;
             this.button1.Text = "Delete Account";
             this.button1.UseVisualStyleBackColor = true;
@@ -379,11 +380,23 @@ namespace LingoLearn
             this.label2.TabIndex = 17;
             this.label2.Text = "Are you certain that you want to delete your account?";
             // 
+            // logout_button
+            // 
+            this.logout_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.logout_button.Location = new System.Drawing.Point(683, 100);
+            this.logout_button.Name = "logout_button";
+            this.logout_button.Size = new System.Drawing.Size(187, 50);
+            this.logout_button.TabIndex = 21;
+            this.logout_button.Text = "Log out";
+            this.logout_button.UseVisualStyleBackColor = true;
+            this.logout_button.Click += new System.EventHandler(this.logout_button_Click);
+            // 
             // settings_student
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(882, 553);
+            this.Controls.Add(this.logout_button);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.settings_button);
             this.Controls.Add(this.homepage_button);
@@ -437,5 +450,6 @@ namespace LingoLearn
         private System.Windows.Forms.Button cancel_deletion_button;
         private System.Windows.Forms.Button delete_button;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button logout_button;
     }
 }

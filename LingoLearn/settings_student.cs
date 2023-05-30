@@ -32,31 +32,12 @@ namespace LingoLearn
             try
             {
                 cn.Open();
-                if(login.role == 2)
-                {
                     using (SqlCommand cmd = new SqlCommand("getAvailability", cn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
 
                         cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
-
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                this.available = reader["available"].ToString();
-                            }
-                        }
-                    }
-                    cn.Close();
-                }
-                else
-                {
-                    using (SqlCommand cmd = new SqlCommand("getAvailabilityStudent", cn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-
-                        cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
+                        cmd.Parameters.Add("@user_role", SqlDbType.Int).Value = login.role;
 
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
@@ -66,9 +47,7 @@ namespace LingoLearn
                             }
                         }
                     }
-                    cn.Close();
-                }
-                
+                cn.Close();
             }
             finally
             {
@@ -643,6 +622,12 @@ namespace LingoLearn
                     }
                 }
             }
+        }
+
+        private void logout_button_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Logged out successfully", "User log out", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            utils.loadForm(this, new startpage());
         }
     }
 }

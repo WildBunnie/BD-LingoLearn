@@ -37,6 +37,7 @@ namespace LingoLearn
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
+                    cmd.Parameters.Add("@user_role", SqlDbType.Int).Value = login.role;
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
@@ -616,6 +617,12 @@ namespace LingoLearn
                     }
                 }
             }
+        }
+
+        private void logout_button_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Logged out successfully", "User log out", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            utils.loadForm(this, new startpage());
         }
     }
 }

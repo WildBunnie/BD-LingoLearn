@@ -1,6 +1,12 @@
 -- Query to create all Stored Procedures, Indexes and UFD's
 
 
+
+/*
+/////////////////						/////////////////
+/////////////////	Stored Procedures	/////////////////
+/////////////////						/////////////////
+*/
 DROP PROC IF EXISTS userFromCredentials
 USE [LingoLearn]
 GO
@@ -69,38 +75,6 @@ AS
 	BEGIN CATCH
 		RETURN 0
 	END CATCH
-GO
-
-DROP FUNCTION IF EXISTS isStudentOf
-USE [LingoLearn]
-GO
-CREATE FUNCTION dbo.isStudentOf (@student_id int, @teacher_id int, @designation varchar(40))
-RETURNS int
-AS
-BEGIN
-    IF (SELECT COUNT(*) FROM TEACHES_STUDENTS WHERE learner_id = @student_id AND teacher_id=@teacher_id AND designation=@designation) >= 1
-	BEGIN
-		RETURN 1
-	END
-
-	RETURN 0
-END
-GO
-
-DROP FUNCTION IF EXISTS isLearningLanguage
-USE [LingoLearn]
-GO
-CREATE FUNCTION dbo.isLearningLanguage (@student_id int, @designation varchar(40))
-RETURNS int
-AS
-BEGIN
-    IF (SELECT COUNT(*) FROM LEARNING WHERE LEARNING.user_id = @student_id AND LEARNING.designation = @designation) >= 1
-	BEGIN
-		RETURN 1
-	END
-
-	RETURN 0
-END
 GO
 
 DROP PROC IF EXISTS getUserQuizes
@@ -176,6 +150,10 @@ AS
 			WHERE EXISTS (SELECT * FROM TEACHES_STUDENTS WHERE learner_id = @user_id AND TEACHES_STUDENTS.teacher_id=TEACHER.id) OR TEACHER.id IS NULL
 GO
 
+
+-- Get user quizzes vs get quizzes?
+-- get possible teachers is duplicated
+
 DROP PROC IF EXISTS getPossibleTeachers
 USE [LingoLearn]
 GO
@@ -241,8 +219,6 @@ AS
 	SELECT SCOPE_IDENTITY() as id
 GO
 
-
-
 DROP PROC IF EXISTS addQuestion
 USE [LingoLearn]
 GO
@@ -256,9 +232,6 @@ AS
 
 	SELECT SCOPE_IDENTITY() as id
 GO
-
-
-
 
 DROP PROC IF EXISTS addAnswer
 USE [LingoLearn]
@@ -277,23 +250,20 @@ DROP PROC IF EXISTS getAvailability
 USE [LingoLearn]
 GO
 
-CREATE PROCEDURE getAvailability (@id int)
+CREATE PROCEDURE getAvailability (@id int, @user_role int)
 AS
-	SELECT available FROM TEACHER
-	WHERE id = @id
-
-	SELECT looking_for_teacher FROM LEARNER
-	WHERE id = @id
-GO
-
-DROP PROC IF EXISTS getAvailabilityStudent
-USE [LingoLearn]
-GO
-
-CREATE PROCEDURE getAvailabilityStudent (@id int)
-AS
-	SELECT looking_for_teacher FROM LEARNER
-	WHERE id = @id
+BEGIN
+	if (@user_role = 2)
+		BEGIN
+		SELECT available FROM TEACHER
+		WHERE id = @id
+		END
+	ELSE
+		BEGIN
+		SELECT looking_for_teacher FROM LEARNER
+		WHERE id = @id
+		END
+END
 GO
 
 
@@ -442,5 +412,46 @@ BEGIN
 
 	DELETE FROM TEACHES_LANGUAGE
 	WHERE teacher_id = @id AND designation = @designation
+END
+GO
+
+
+/*
+/////////////////						/////////////////
+/////////////////	UD Functions		/////////////////
+/////////////////						/////////////////
+*/
+
+
+DROP FUNCTION IF EXISTS isStudentOf
+USE [LingoLearn]
+GO
+CREATE FUNCTION dbo.isStudentOf (@student_id int, @teacher_id int, @designation varchar(40))
+RETURNS int
+AS
+BEGIN
+    IF (SELECT COUNT(*) FROM TEACHES_STUDENTS WHERE learner_id = @student_id AND teacher_id=@teacher_id AND designation=@designation) >= 1
+	BEGIN
+		RETURN 1
+	END
+
+	RETURN 0
+END
+GO
+
+
+DROP FUNCTION IF EXISTS isLearningLanguage
+USE [LingoLearn]
+GO
+CREATE FUNCTION dbo.isLearningLanguage (@student_id int, @designation varchar(40))
+RETURNS int
+AS
+BEGIN
+    IF (SELECT COUNT(*) FROM LEARNING WHERE LEARNING.user_id = @student_id AND LEARNING.designation = @designation) >= 1
+	BEGIN
+		RETURN 1
+	END
+
+	RETURN 0
 END
 GO
