@@ -105,11 +105,12 @@ USE [LingoLearn]
 GO
 CREATE PROC getPossibleTeachers (@user_id int)
 AS
-	SELECT id, teacher_name, designation as "language", MAX(CASE dbo.isStudentOf(@user_id, id, designation)  WHEN 1 THEN 'True' ELSE 'False' END) as teaches_you
+	SELECT id, teacher_name, designation, MAX(CASE dbo.isStudentOf(@user_id, id, designation)  WHEN 1 THEN 'True' ELSE 'False' END) as teaches_you
 		FROM TEACHER JOIN TEACHES_LANGUAGE ON TEACHER.id = TEACHES_LANGUAGE.teacher_id
 		WHERE available=1 AND dbo.isLearningLanguage(@user_id, designation)=1
 		GROUP BY id, teacher_name, designation
 GO
+
 
 DROP PROC IF EXISTS setUserAnsweredQuiz
 USE [LingoLearn]
@@ -138,31 +139,6 @@ AS
 	SELECT quiz_id, QUESTION.id as question_id, question_text, text as answer, type, designation, score, ANSWER.id as answer_id
 		FROM QUESTION JOIN ANSWER ON QUESTION.id=ANSWER.question_id
 		WHERE quiz_id=@quiz_id
-GO
-
-DROP PROC IF EXISTS getQuizes
-USE [LingoLearn]
-GO
-CREATE PROC getQuizes (@user_id int)
-AS
-	SELECT QUIZ.id, QUIZ.name, user_id, type, TEACHER.id as teacher_id,TEACHER.teacher_name, designation
-			FROM (QUIZES_ANSWERED RIGHT OUTER JOIN QUIZ ON QUIZ.id = QUIZES_ANSWERED.quiz_id) LEFT OUTER JOIN TEACHER ON TEACHER.id = creator_id
-			WHERE EXISTS (SELECT * FROM TEACHES_STUDENTS WHERE learner_id = @user_id AND TEACHES_STUDENTS.teacher_id=TEACHER.id) OR TEACHER.id IS NULL
-GO
-
-
--- Get user quizzes vs get quizzes?
--- get possible teachers is duplicated
-
-DROP PROC IF EXISTS getPossibleTeachers
-USE [LingoLearn]
-GO
-CREATE PROC getPossibleTeachers (@user_id int)
-AS
-	SELECT id, teacher_name, designation, MAX(CASE dbo.isStudentOf(@user_id, id, designation)  WHEN 1 THEN 'True' ELSE 'False' END) as teaches_you
-		FROM TEACHER JOIN TEACHES_LANGUAGE ON TEACHER.id = TEACHES_LANGUAGE.teacher_id
-		WHERE available=1 AND dbo.isLearningLanguage(@user_id, designation)=1
-		GROUP BY id, teacher_name, designation
 GO
 
 DROP PROC IF EXISTS startTeaching
@@ -283,7 +259,6 @@ AS
 GO
 
 
-
 DROP PROC IF EXISTS deleteUser
 USE [LingoLearn]
 GO
@@ -293,33 +268,6 @@ AS
 	WHERE id = @id
 GO
 
-DROP TRIGGER IF EXISTS deleteUserFromEverything
-USE [LingoLearn]
-GO
-CREATE TRIGGER deleteUserFromEverything
-ON "USER" INSTEAD OF DELETE AS
-BEGIN
-	DECLARE @id int = (SELECT id FROM deleted)
-
-	DELETE FROM TEACHES_STUDENTS
-	WHERE teacher_id = @id
-
-	DELETE FROM TEACHES_LANGUAGE
-	WHERE teacher_id = @id
-
-	DELETE FROM QUIZ
-	WHERE creator_id = @id
-
-	DELETE FROM TEACHER
-	WHERE id = @id
-
-	DELETE FROM LEARNER
-	WHERE id = @id
-
-	DELETE FROM "USER"
-	WHERE id = @id
-END
-GO
 
 DROP PROC IF EXISTS updatePassword
 USE [LingoLearn]
@@ -397,25 +345,6 @@ AS
 GO
 
 
-
-DROP TRIGGER IF EXISTS deleteUserLanguageFromEverything
-USE [LingoLearn]
-GO
-CREATE TRIGGER deleteUserLanguageFromEverything
-ON TEACHES_LANGUAGE INSTEAD OF DELETE AS
-BEGIN
-	DECLARE @id int = (SELECT teacher_id FROM deleted)
-	DECLARE @designation VARCHAR(40) = (SELECT designation FROM deleted)
-
-	DELETE FROM TEACHES_STUDENTS
-	WHERE teacher_id = @id AND designation = @designation
-
-	DELETE FROM TEACHES_LANGUAGE
-	WHERE teacher_id = @id AND designation = @designation
-END
-GO
-
-
 /*
 /////////////////						/////////////////
 /////////////////	UD Functions		/////////////////
@@ -453,5 +382,101 @@ BEGIN
 	END
 
 	RETURN 0
+END
+GO
+
+DROP FUNCTION IF EXISTS typeOfUser
+USE [LingoLearn]
+GO
+CREATE FUNCTION typeOfUser(@id int)
+RETURNS INT
+AS
+BEGIN
+	declare @number INT = 1
+	IF (SELECT COUNT(TEACHER.id) FROM "USER" JOIN TEACHER ON TEACHER.id = "USER".id) = 1
+		SET @number = 2
+	RETURN @number
+END
+GO
+
+
+/*
+/////////////////						/////////////////
+/////////////////	   TRIGGERS			/////////////////
+/////////////////						/////////////////
+*/
+
+
+DROP TRIGGER IF EXISTS deleteUserLanguageFromEverything
+USE [LingoLearn]
+GO
+CREATE TRIGGER deleteUserLanguageFromEverything
+ON TEACHES_LANGUAGE INSTEAD OF DELETE AS
+BEGIN
+	DECLARE @id int = (SELECT teacher_id FROM deleted)
+	DECLARE @designation VARCHAR(40) = (SELECT designation FROM deleted)
+
+	DELETE FROM TEACHES_STUDENTS
+	WHERE teacher_id = @id AND designation = @designation
+
+	DELETE FROM TEACHES_LANGUAGE
+	WHERE teacher_id = @id AND designation = @designation
+END
+GO
+
+
+DROP TRIGGER IF EXISTS deleteUserFromEverything
+USE [LingoLearn]
+GO
+CREATE TRIGGER deleteUserFromEverything
+ON "USER" INSTEAD OF DELETE AS
+BEGIN
+	DECLARE @id int = (SELECT id FROM deleted)
+
+	IF(dbo.typeOfUser(@id) = 2)
+	BEGIN
+		DELETE FROM TEACHES_STUDENTS
+		WHERE teacher_id = @id
+
+		DELETE FROM TEACHES_LANGUAGE
+		WHERE teacher_id = @id
+
+		DELETE FROM QUIZ
+		WHERE creator_id = @id
+
+		DELETE FROM LEARNER
+		WHERE id = @id
+
+		DELETE FROM TEACHER
+		WHERE id = @id
+
+		DELETE FROM "USER"
+		WHERE id = @id
+	END
+
+	ELSE
+	BEGIN
+		DELETE FROM KNOWS
+		WHERE user_id = @id
+
+		DELETE FROM LEARNING
+		WHERE user_id = @id
+
+		DELETE FROM ANSWERS
+		WHERE user_id = @id
+
+		DELETE FROM TEACHES_STUDENTS
+		WHERE learner_id = @id
+
+		DELETE FROM QUIZES_ANSWERED
+		WHERE user_id = @id
+
+		DELETE FROM LEARNER
+		WHERE id = @id
+
+		DELETE FROM "USER"
+		WHERE id = @id
+
+	END
 END
 GO

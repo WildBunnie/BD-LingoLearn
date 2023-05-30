@@ -408,6 +408,7 @@ namespace LingoLearn
             this.Controls.Add(this.dataGridView1);
             this.Name = "settings_teacher";
             this.Text = "Settings";
+            this.Load += new System.EventHandler(this.settings_teacher_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.availability_panel.ResumeLayout(false);
             this.availability_panel.PerformLayout();

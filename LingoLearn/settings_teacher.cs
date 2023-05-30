@@ -624,5 +624,10 @@ namespace LingoLearn
             MessageBox.Show("Logged out successfully", "User log out", MessageBoxButtons.OK, MessageBoxIcon.Information);
             utils.loadForm(this, new startpage());
         }
+
+        private void settings_teacher_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
