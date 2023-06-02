@@ -441,11 +441,11 @@ BEGIN
 		DELETE FROM TEACHES_LANGUAGE
 		WHERE teacher_id = @id
 
+		DELETE FROM KNOWS
+		WHERE user_id = @id
+
 		DELETE FROM QUIZ
 		WHERE creator_id = @id
-
-		DELETE FROM LEARNER
-		WHERE id = @id
 
 		DELETE FROM TEACHER
 		WHERE id = @id
