@@ -1,7 +1,3 @@
--- Query to create all Stored Procedures, Indexes and UFD's
-
-
-
 /*
 /////////////////						/////////////////
 /////////////////	Stored Procedures	/////////////////
@@ -309,40 +305,35 @@ DROP PROC IF EXISTS addLanguage
 USE [LingoLearn]
 GO
 
-CREATE PROCEDURE addLanguage (@id int, @designation VARCHAR(40))
+CREATE PROCEDURE addLanguage (@id int, @designation VARCHAR(40), @user_role int)
 AS
-	INSERT INTO TEACHES_LANGUAGE
-	VALUES (@designation, @id)
+	if (@user_role = 2)
+		BEGIN
+		INSERT INTO TEACHES_LANGUAGE
+		VALUES (@designation, @id)
+		END
+	ELSE
+		BEGIN
+		INSERT INTO LEARNING
+		VALUES (@id, @designation)
+		END
 GO
-
-DROP PROC IF EXISTS learnLanguage
-USE [LingoLearn]
-GO
-
-CREATE PROCEDURE learnLanguage (@id int, @designation VARCHAR(40))
-AS
-	INSERT INTO LEARNING
-	VALUES (@id, @designation)
-GO
-
 
 
 DROP PROC IF EXISTS removeLanguage
 USE [LingoLearn]
 GO
 
-CREATE PROCEDURE removeLanguage (@id int, @designation VARCHAR(40))
+CREATE PROCEDURE removeLanguage (@id int, @designation VARCHAR(40), @user_role int)
 AS
-	DELETE FROM TEACHES_LANGUAGE WHERE teacher_id = @id AND designation = @designation
-GO
-
-DROP PROC IF EXISTS removeLearning
-USE [LingoLearn]
-GO
-
-CREATE PROCEDURE removeLearning (@id int, @designation VARCHAR(40))
-AS
-	DELETE FROM LEARNING WHERE learner_id = @id AND designation = @designation
+	if (@user_role = 2)
+		BEGIN
+		DELETE FROM TEACHES_LANGUAGE WHERE teacher_id = @id AND designation = @designation
+		END
+	ELSE
+		BEGIN
+			DELETE FROM LEARNING WHERE learner_id = @id AND designation = @designation
+		END
 GO
 
 
@@ -442,11 +433,11 @@ BEGIN
 		DELETE FROM TEACHES_LANGUAGE
 		WHERE teacher_id = @id
 
+		DELETE FROM KNOWS
+		WHERE user_id = @id
+
 		DELETE FROM QUIZ
 		WHERE creator_id = @id
-
-		DELETE FROM LEARNER
-		WHERE id = @id
 
 		DELETE FROM TEACHER
 		WHERE id = @id

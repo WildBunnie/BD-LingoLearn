@@ -314,6 +314,7 @@ namespace LingoLearn
 
                         cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
                         cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = portuguese_box.Text;
+                        cmd.Parameters.Add("@user_role", SqlDbType.Int).Value = login.role;
                         cmd.ExecuteNonQuery();
                     }
                     cn.Close();
@@ -339,6 +340,7 @@ namespace LingoLearn
 
                             cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
                             cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = portuguese_box.Text;
+                            cmd.Parameters.Add("@user_role", SqlDbType.Int).Value = login.role;
                             cmd.ExecuteNonQuery();
                         }
                         cn.Close();
@@ -367,6 +369,7 @@ namespace LingoLearn
 
                         cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
                         cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = spanish_box.Text;
+                        cmd.Parameters.Add("@user_role", SqlDbType.Int).Value = login.role;
                         cmd.ExecuteNonQuery();
                     }
                     cn.Close();
@@ -392,6 +395,7 @@ namespace LingoLearn
 
                             cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
                             cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = spanish_box.Text;
+                            cmd.Parameters.Add("@user_role", SqlDbType.Int).Value = login.role;
                             cmd.ExecuteNonQuery();
                         }
                         cn.Close();
@@ -420,6 +424,7 @@ namespace LingoLearn
 
                         cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
                         cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = english_box.Text;
+                        cmd.Parameters.Add("@user_role", SqlDbType.Int).Value = login.role;
                         cmd.ExecuteNonQuery();
                     }
                     cn.Close();
@@ -445,6 +450,7 @@ namespace LingoLearn
 
                             cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
                             cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = english_box.Text;
+                            cmd.Parameters.Add("@user_role", SqlDbType.Int).Value = login.role;
                             cmd.ExecuteNonQuery();
                         }
                         cn.Close();
@@ -473,6 +479,7 @@ namespace LingoLearn
 
                         cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
                         cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = korean_box.Text;
+                        cmd.Parameters.Add("@user_role", SqlDbType.Int).Value = login.role;
                         cmd.ExecuteNonQuery();
                     }
                     cn.Close();
@@ -498,6 +505,7 @@ namespace LingoLearn
 
                             cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
                             cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = korean_box.Text;
+                            cmd.Parameters.Add("@user_role", SqlDbType.Int).Value = login.role;
                             cmd.ExecuteNonQuery();
                         }
                         cn.Close();
@@ -526,6 +534,7 @@ namespace LingoLearn
 
                         cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
                         cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = french_box.Text;
+                        cmd.Parameters.Add("@user_role", SqlDbType.Int).Value = login.role;
                         cmd.ExecuteNonQuery();
                     }
                     cn.Close();
@@ -551,6 +560,7 @@ namespace LingoLearn
 
                             cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
                             cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = french_box.Text;
+                            cmd.Parameters.Add("@user_role", SqlDbType.Int).Value = login.role;
                             cmd.ExecuteNonQuery();
                         }
                         cn.Close();
@@ -579,6 +589,7 @@ namespace LingoLearn
 
                         cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
                         cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = italian_box.Text;
+                        cmd.Parameters.Add("@user_role", SqlDbType.Int).Value = login.role;
                         cmd.ExecuteNonQuery();
                     }
                     cn.Close();
@@ -604,6 +615,7 @@ namespace LingoLearn
 
                             cmd.Parameters.Add("@id", SqlDbType.Int).Value = login.id;
                             cmd.Parameters.Add("@designation", SqlDbType.VarChar, 40).Value = italian_box.Text;
+                            cmd.Parameters.Add("@user_role", SqlDbType.Int).Value = login.role;
                             cmd.ExecuteNonQuery();
                         }
                         cn.Close();
