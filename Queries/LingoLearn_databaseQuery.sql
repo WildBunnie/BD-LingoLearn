@@ -5,7 +5,7 @@ IF DB_ID('LingoLearn') IS NULL
 USE [LingoLearn]
 
 CREATE TABLE "USER"(
-	id							int				IDENTITY(1,1) PRIMARY KEY,
+	id							int				IDENTITY(1,1)	PRIMARY KEY,
 	email						varchar(40)		UNIQUE NOT NULL,
 	username					varchar(40)		NOT NULL,
 	"password"					varchar(40)		NOT NULL);
@@ -35,15 +35,9 @@ CREATE TABLE "LANGUAGE"(
 	);
 
 CREATE TABLE LEARNING(
-	"user_id"					int,
+	learner_id					int,
 	designation					VARCHAR(40),
-	PRIMARY KEY("user_id", designation));						-- Both foreign keys
-
-CREATE TABLE KNOWS(
-	"user_id"					int,
-	designation					VARCHAR(40),
-	PRIMARY KEY("user_id", designation));						-- Both foreign keys
-
+	PRIMARY KEY(learner_id, designation));						-- Both foreign keys
 
 CREATE TABLE DIFICULTY(
 	designation_1				VARCHAR(40),
@@ -59,9 +53,9 @@ CREATE TABLE QUIZ(
 	creator_id					int);			-- Foreign key
 
 CREATE TABLE QUIZES_ANSWERED(
-	"user_id"					int,
+	learner_id					int,
 	quiz_id						int,
-	PRIMARY KEY("user_id", quiz_id));							-- Both foreign keys
+	PRIMARY KEY(learner_id, quiz_id));							-- Both foreign keys
 
 CREATE TABLE QUESTION(
 	id							int			IDENTITY(1,1) PRIMARY KEY,
@@ -77,10 +71,9 @@ CREATE TABLE ANSWER(
 	question_id					int);							-- Foreign key
 
 CREATE TABLE ANSWERS(
-	"user_id"					int,
+	learner_id					int,
 	answer_id					int,
-	PRIMARY KEY("user_id", answer_id));							-- Both foreign keys
-
+	PRIMARY KEY(learner_id, answer_id));							-- Both foreign keys
 
 -- TEACHER TABLE
 ALTER TABLE TEACHER
@@ -123,23 +116,12 @@ ALTER TABLE TEACHES_LANGUAGE
 
 -- LEARNING TABLE
 ALTER TABLE LEARNING
-			ADD CONSTRAINT fk_user_learning_id
-			FOREIGN KEY ("user_id")
-			REFERENCES "USER"(id);
+			ADD CONSTRAINT fk_learner_learning_id
+			FOREIGN KEY (learner_id)
+			REFERENCES LEARNER(id);
 
 ALTER TABLE LEARNING
 			ADD CONSTRAINT fk_language_learning_id
-			FOREIGN KEY (designation)
-			REFERENCES "LANGUAGE"(designation);
-
--- KNOWS TABLE
-ALTER TABLE KNOWS
-			ADD CONSTRAINT fk_user_knows_id
-			FOREIGN KEY ("user_id")
-			REFERENCES "USER"(id);
-
-ALTER TABLE KNOWS
-			ADD CONSTRAINT fk_language_knows_id
 			FOREIGN KEY (designation)
 			REFERENCES "LANGUAGE"(designation);
 
@@ -168,7 +150,7 @@ ALTER TABLE QUIZ
 -- QUIZESANSWERED TABLE
 ALTER TABLE QUIZES_ANSWERED
 			ADD CONSTRAINT fk_quizanswer_user_id
-			FOREIGN KEY ("user_id")
+			FOREIGN KEY (learner_id)
 			REFERENCES "USER"(id);
 
 ALTER TABLE QUIZES_ANSWERED
@@ -197,7 +179,7 @@ ALTER TABLE ANSWER
 -- ANSWERS TABLE 
 ALTER TABLE ANSWERS
 			ADD CONSTRAINT fk_answers_user_id
-			FOREIGN KEY ("user_id")
+			FOREIGN KEY (learner_id)
 			REFERENCES "USER"(id);
 
 ALTER TABLE ANSWERS

@@ -92,8 +92,9 @@ AS
 
 	SELECT user_id, quiz_id, sum(score) as score
 		INTO #temp_score
-		FROM (ANSWERS JOIN ANSWER ON ANSWERS.answer_id = ANSWER.id) JOIN QUESTION ON QUESTION.id=ANSWER.question_id
-		GROUP BY ANSWERS.user_id, QUESTION.quiz_id
+		FROM (ANSWERS JOIN ANSWER ON ANSWERS.answer_id = ANSWER.id) JOIN QUESTION
+		ON QUESTION.id=ANSWER.question_id
+		GROUP BY ANSWERS.learner_id, QUESTION.quiz_id
 		HAVING user_id=@user_id
 
 	SELECT id, name, answered, type, creator, language, ISNULL(score,0) as score FROM
@@ -175,7 +176,7 @@ BEGIN
 	ELSE
 		BEGIN
 		SELECT designation FROM "USER" 
-		JOIN LEARNING ON id = user_id 
+		JOIN LEARNING ON id = learner_id 
 		WHERE id = @id
 		END
 END
@@ -286,7 +287,7 @@ GO
 CREATE PROC getLeaderboard
 AS
 	SELECT "USER".id, "USER".username, ISNULL(SUM(score),0) as score
-		FROM "USER" LEFT OUTER JOIN (ANSWERS JOIN ANSWER ON ANSWERS.answer_id=ANSWER.id) ON "USER".id = ANSWERS.user_id
+		FROM "USER" LEFT OUTER JOIN (ANSWERS JOIN ANSWER ON ANSWERS.answer_id=ANSWER.id) ON "USER".id = ANSWERS.learner_id
 		WHERE EXISTS (SELECT id FROM LEARNER WHERE LEARNER.id = "USER".id)
 		GROUP BY "USER".id, "USER".username
 		ORDER BY score DESC
@@ -341,7 +342,7 @@ GO
 
 CREATE PROCEDURE removeLearning (@id int, @designation VARCHAR(40))
 AS
-	DELETE FROM LEARNING WHERE user_id = @id AND designation = @designation
+	DELETE FROM LEARNING WHERE learner_id = @id AND designation = @designation
 GO
 
 
@@ -376,7 +377,7 @@ CREATE FUNCTION dbo.isLearningLanguage (@student_id int, @designation varchar(40
 RETURNS int
 AS
 BEGIN
-    IF (SELECT COUNT(*) FROM LEARNING WHERE LEARNING.user_id = @student_id AND LEARNING.designation = @designation) >= 1
+    IF (SELECT COUNT(*) FROM LEARNING WHERE LEARNING.learner_id = @student_id AND LEARNING.designation = @designation) >= 1
 	BEGIN
 		RETURN 1
 	END
@@ -456,20 +457,18 @@ BEGIN
 
 	ELSE
 	BEGIN
-		DELETE FROM KNOWS
-		WHERE user_id = @id
 
 		DELETE FROM LEARNING
-		WHERE user_id = @id
+		WHERE learner_id = @id
 
 		DELETE FROM ANSWERS
-		WHERE user_id = @id
+		WHERE learner_id = @id
 
 		DELETE FROM TEACHES_STUDENTS
 		WHERE learner_id = @id
 
 		DELETE FROM QUIZES_ANSWERED
-		WHERE user_id = @id
+		WHERE learner_id = @id
 
 		DELETE FROM LEARNER
 		WHERE id = @id
