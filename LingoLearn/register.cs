@@ -25,11 +25,11 @@ namespace LingoLearn
             String email = email_textbox.Text;
             String password = password_textbox.Text;
 
-            int isStudent = 0, isTeacher = 0;
+            int role = 0;
             if (student_radio.Checked)
-                isStudent = 1;
+                role = 1;
             else if (teacher_radio.Checked)
-                isTeacher = 1;
+                role = 2;
 
             String errorMessage;
 
@@ -41,9 +41,9 @@ namespace LingoLearn
             {
                 errorMessage = "Invalid Email";
             }
-            else if (isStudent == 0 && isTeacher == 0)
+            else if (role == 0)
             {
-                errorMessage = "You must be a student and/or a teacher";
+                errorMessage = "You must be a student or a teacher";
             }
             //else if (password.Length < 8)
             //{
@@ -51,13 +51,13 @@ namespace LingoLearn
             //}
             else
             {
-                user_register(name, email, password, isStudent, isTeacher);
+                user_register(name, email, password, role);
                 return;
             }
             MessageBox.Show(errorMessage, "login error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        private void user_register(String name, String email, String password, int isStudent, int isTeacher)
+        private void user_register(String name, String email, String password, int role)
         {
             SqlConnection cn = startpage.cn;
             using (SqlCommand cmd = new SqlCommand("addUser", cn))
@@ -67,8 +67,7 @@ namespace LingoLearn
                 cmd.Parameters.Add("@username", SqlDbType.VarChar, 40).Value = name;
                 cmd.Parameters.Add("@email", SqlDbType.VarChar, 40).Value = email;
                 cmd.Parameters.Add("@password", SqlDbType.VarChar, 40).Value = password;
-                cmd.Parameters.Add("@isLearner", SqlDbType.Bit).Value = isStudent;
-                cmd.Parameters.Add("@isTeacher", SqlDbType.Bit).Value = isTeacher;
+                cmd.Parameters.Add("@role", SqlDbType.Int).Value = role;
 
                 cmd.Parameters.Add("@returnValue", SqlDbType.Int).Direction = ParameterDirection.ReturnValue;
 

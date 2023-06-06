@@ -27,7 +27,8 @@ namespace LingoLearn
             {
                 column.SortMode = DataGridViewColumnSortMode.NotSortable;
             }
-            dataGridView1.Rows[0].Selected = false;
+            if (dataGridView1.Rows.Count != 0)
+                dataGridView1.Rows[0].Selected = false;
         }
 
         public void loadStudents()
@@ -49,6 +50,7 @@ namespace LingoLearn
                             LeaderboardStudent s = new LeaderboardStudent();
                             s.name = String.Format("{0}#{1}", reader["username"].ToString(), reader["id"].ToString());
                             s.score = Convert.ToInt32(reader["score"]);
+                            s.quizes_answered = Convert.ToInt32(reader["quizes_answered"]);
                             lb.Add(s);
                         }
                     }
@@ -83,5 +85,6 @@ namespace LingoLearn
     {
         public String name { get; set; }
         public int score { get; set; }
+        public int quizes_answered { get; set; }
     }
 }
