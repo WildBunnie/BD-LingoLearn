@@ -113,3 +113,21 @@ VALUES
 (0, 'outregeous', 6),
 (0, 'outeragous', 6),
 (0, 'outragous', 6);
+
+
+INSERT INTO QUIZES_ANSWERED
+-- learner_id, quiz_id
+VALUES
+(1,1),
+(3,3),
+(4,3);
+
+INSERT INTO ANSWERS
+VALUES
+-- learner_id, answer_id
+(1, 2),
+(1, 5),
+(4, 13),
+(3, 10),
+(3, 11),
+(3, 12);
