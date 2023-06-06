@@ -86,6 +86,7 @@ namespace LingoLearn
 
             foreach (UserAnswer ua in user_answers)
             {
+                MessageBox.Show("answered " + ua.AnswerID, "Question Score", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 using (SqlCommand cmd = new SqlCommand("setUserAnswer", cn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -122,7 +123,7 @@ namespace LingoLearn
         private void next_question_button_Click(object sender, EventArgs e)
         {
 
-            List<String> text = new List<String>();
+            List<Answer> answers = new List<Answer>();
             int q_score = 0;
 
             if (questions[current].type.Equals("Multi-choice"))
@@ -139,13 +140,13 @@ namespace LingoLearn
                     {
                         q_score = 0;
                         done = true;
-                        text.Clear();
+                        answers.Clear();
                     }
                     else
                     {
                         q_score += score;
                     }
-                    text.Add(questions[current].answers[0].text);
+                    answers.Add(questions[current].answers[0]);
                 }
                 if (checkBox2.Checked && !done)
                 {
@@ -154,13 +155,13 @@ namespace LingoLearn
                     {
                         q_score = 0;
                         done = true;
-                        text.Clear();
+                        answers.Clear();
                     }
                     else
                     {
                         q_score += score;
                     }
-                    text.Add(questions[current].answers[1].text);
+                    answers.Add(questions[current].answers[1]);
                 }
                 if (checkBox3.Checked && !done)
                 {
@@ -169,13 +170,13 @@ namespace LingoLearn
                     {
                         q_score = 0;
                         done = true;
-                        text.Clear();
+                        answers.Clear();
                     }
                     else
                     {
                         q_score += score;
                     }
-                    text.Add(questions[current].answers[2].text);
+                    answers.Add(questions[current].answers[2]);
                 }
                 if (checkBox4.Checked && !done)
                 {
@@ -184,13 +185,13 @@ namespace LingoLearn
                     {
                         q_score = 0;
                         done = true;
-                        text.Clear();
+                        answers.Clear();
                     }
                     else
                     {
                         q_score += score;
                     }
-                    text.Add(questions[current].answers[3].text);
+                    answers.Add(questions[current].answers[3]);
                 }
 
             }
@@ -203,29 +204,29 @@ namespace LingoLearn
                     q_score = questions[current].answers[0].score;
                 if (q_score == 100)
                 {
-                    text.Add(questions[current].answers[0].text);
+                    answers.Add(questions[current].answers[0]);
                 }
             }
+
             score += q_score;
-            answer(q_score, text);            
+            answer(q_score, answers);            
             next();
         }
 
-        private void answer(int q_score, List<String> text)
+        private void answer(int q_score, List<Answer> answers)
         {
             MessageBox.Show("You got a score of " + q_score.ToString() + " on this question", "Question Score", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             // this is here because we don't add translation answers
             // if the response is incorrect
-            if (text.Count == 0)
+            if (answers.Count == 0)
                 return;
 
-            for(int i = 0; i<text.Count; i++)
+            foreach (Answer a in answers)
             {
-                String t = text[i];
                 UserAnswer ua = new UserAnswer();
-                ua.AnswerID = questions[current].answers[i].ID;
-                ua.text = t;
+                ua.AnswerID = a.ID;
+                ua.text = a.text;
                 user_answers.Add(ua);
             }
 

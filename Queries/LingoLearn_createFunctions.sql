@@ -44,28 +44,35 @@ GO
 DROP PROC IF EXISTS addUser
 USE [LingoLearn]
 GO
-CREATE PROC addUser (@username varchar(40), @email varchar(40), @password varchar(40), @isLearner bit, @isTeacher bit)
+CREATE PROC addUser (@username varchar(40), @email varchar(40), @password varchar(40), @role int)
 AS
 	BEGIN TRY
-		INSERT INTO "USER" VALUES (@email, @username, @password)
+		BEGIN TRAN
+			INSERT INTO "USER" VALUES (@email, @username, @password)
 
-		-- get the id that was given to
-		-- the user when it was added
-		DECLARE @id int;
-		SELECT @id = id
-			FROM "USER"
-			WHERE email=@email
+			-- get the id that was given to
+			-- the user when it was added
+			DECLARE @id int;
+			SELECT @id = id
+				FROM "USER"
+				WHERE email=@email
 
-		IF @isLearner = 1
-		BEGIN
-			INSERT INTO LEARNER VALUES (@id, 0)
-		END
+			IF @role = 1
+			BEGIN
+				INSERT INTO LEARNER VALUES (@id, 0)
+			END
 
-		ELSE IF @isTeacher = 1
-		BEGIN
-			INSERT INTO TEACHER VALUES (@id, 0, @username)
-		END
+			ELSE IF @role = 2
+			BEGIN
+				INSERT INTO TEACHER VALUES (@id, 0, @username)
+			END
 
+			ELSE
+			BEGIN
+				ROLLBACK
+				RETURN 0
+			END
+		COMMIT TRAN
 		RETURN 1
 	END TRY
 	BEGIN CATCH
@@ -80,17 +87,18 @@ CREATE PROC getUserQuizes (@user_id int)
 AS
 	DROP TABLE IF EXISTS #temp
 	DROP TABLE IF EXISTS #temp_score
-	SELECT QUIZ.id, QUIZ.name, MAX(CASE user_id  WHEN @user_id THEN 'True' ELSE 'False' END) as answered, QUIZ.type, ISNULL(TEACHER.teacher_name,'LingoLearn') as creator, designation as "language"
+	SELECT QUIZ.id, QUIZ.name, MAX(CASE learner_id  WHEN @user_id THEN 'True' ELSE 'False' END) as answered, QUIZ.type, ISNULL(TEACHER.teacher_name,'LingoLearn') as creator, designation as "language"
 		INTO #temp
 		FROM (QUIZES_ANSWERED RIGHT OUTER JOIN QUIZ ON QUIZ.id = QUIZES_ANSWERED.quiz_id) LEFT OUTER JOIN TEACHER ON TEACHER.id = creator_id
 		WHERE (dbo.isStudentOf(@user_id, TEACHER.id, designation) = 1 OR TEACHER.id IS NULL) AND dbo.isLearningLanguage(@user_id, QUIZ.designation) = 1
 		GROUP BY QUIZ.id, QUIZ.name, QUIZ.type, TEACHER.teacher_name, designation
 
-	SELECT user_id, quiz_id, sum(score) as score
+	SELECT learner_id, quiz_id, sum(score) as score
 		INTO #temp_score
-		FROM (ANSWERS JOIN ANSWER ON ANSWERS.answer_id = ANSWER.id) JOIN QUESTION ON QUESTION.id=ANSWER.question_id
-		GROUP BY ANSWERS.user_id, QUESTION.quiz_id
-		HAVING user_id=@user_id
+		FROM (ANSWERS JOIN ANSWER ON ANSWERS.answer_id = ANSWER.id) JOIN QUESTION
+		ON QUESTION.id=ANSWER.question_id
+		GROUP BY ANSWERS.learner_id, QUESTION.quiz_id
+		HAVING learner_id=@user_id
 
 	SELECT id, name, answered, type, creator, language, ISNULL(score,0) as score FROM
 		#temp LEFT OUTER JOIN #temp_score on #temp.id=#temp_score.quiz_id
@@ -171,7 +179,7 @@ BEGIN
 	ELSE
 		BEGIN
 		SELECT designation FROM "USER" 
-		JOIN LEARNING ON id = user_id 
+		JOIN LEARNING ON id = learner_id 
 		WHERE id = @id
 		END
 END
@@ -281,9 +289,9 @@ USE [LingoLearn]
 GO
 CREATE PROC getLeaderboard
 AS
-	SELECT "USER".id, "USER".username, ISNULL(SUM(score),0) as score
-		FROM "USER" LEFT OUTER JOIN (ANSWERS JOIN ANSWER ON ANSWERS.answer_id=ANSWER.id) ON "USER".id = ANSWERS.user_id
-		WHERE EXISTS (SELECT id FROM LEARNER WHERE LEARNER.id = "USER".id)
+	SELECT "USER".id, "USER".username, ISNULL(SUM(score),0) as score, COUNT(DISTINCT QUESTION.quiz_id) as quizes_answered
+		FROM ("USER" LEFT OUTER JOIN (ANSWERS JOIN ANSWER ON ANSWERS.answer_id=ANSWER.id) ON "USER".id = ANSWERS.learner_id) JOIN QUESTION ON QUESTION.id = ANSWER.question_id
+		WHERE dbo.typeOfUser("USER".id)=1
 		GROUP BY "USER".id, "USER".username
 		ORDER BY score DESC
 GO
@@ -331,7 +339,7 @@ AS
 		END
 	ELSE
 		BEGIN
-			DELETE FROM LEARNING WHERE user_id = @id AND designation = @designation
+			DELETE FROM LEARNING WHERE learner_id = @id AND designation = @designation
 		END
 GO
 
@@ -367,7 +375,7 @@ CREATE FUNCTION dbo.isLearningLanguage (@student_id int, @designation varchar(40
 RETURNS int
 AS
 BEGIN
-    IF (SELECT COUNT(*) FROM LEARNING WHERE LEARNING.user_id = @student_id AND LEARNING.designation = @designation) >= 1
+    IF (SELECT COUNT(*) FROM LEARNING WHERE LEARNING.learner_id = @student_id AND LEARNING.designation = @designation) >= 1
 	BEGIN
 		RETURN 1
 	END
@@ -384,9 +392,12 @@ RETURNS INT
 AS
 BEGIN
 	declare @number INT = 1
-	IF (SELECT COUNT(TEACHER.id) FROM "USER" JOIN TEACHER ON TEACHER.id = "USER".id) = 1
+	IF (SELECT COUNT(*) FROM TEACHER WHERE TEACHER.id = @id) = 1
+	BEGIN
 		SET @number = 2
+	END
 	RETURN @number
+	-- 1 means learner, 2 means teacher
 END
 GO
 
@@ -398,20 +409,20 @@ GO
 */
 
 
-DROP TRIGGER IF EXISTS deleteUserLanguageFromEverything
+DROP TRIGGER IF EXISTS stopTeachingStudents	
 USE [LingoLearn]
 GO
-CREATE TRIGGER deleteUserLanguageFromEverything
+CREATE TRIGGER stopTeachingStudents
 ON TEACHES_LANGUAGE INSTEAD OF DELETE AS
 BEGIN
-	DECLARE @id int = (SELECT teacher_id FROM deleted)
-	DECLARE @designation VARCHAR(40) = (SELECT designation FROM deleted)
+
+	DECLARE @id int = (SELECT DISTINCT teacher_id FROM deleted)
 
 	DELETE FROM TEACHES_STUDENTS
-	WHERE teacher_id = @id AND designation = @designation
+	WHERE teacher_id = @id AND designation in (SELECT designation FROM deleted)
 
 	DELETE FROM TEACHES_LANGUAGE
-	WHERE teacher_id = @id AND designation = @designation
+	WHERE teacher_id = @id AND designation in (SELECT designation FROM deleted)
 END
 GO
 
@@ -426,14 +437,13 @@ BEGIN
 
 	IF(dbo.typeOfUser(@id) = 2)
 	BEGIN
-		DELETE FROM TEACHES_STUDENTS
-		WHERE teacher_id = @id
 
 		DELETE FROM TEACHES_LANGUAGE
 		WHERE teacher_id = @id
 
-		DELETE FROM KNOWS
-		WHERE user_id = @id
+		-- no need to delete from teaches_students
+		-- since there is a trigger (stopTeachingStudents) 
+		-- that deletes when deleating teaches_language
 
 		DELETE FROM QUIZ
 		WHERE creator_id = @id
@@ -447,20 +457,18 @@ BEGIN
 
 	ELSE
 	BEGIN
-		DELETE FROM KNOWS
-		WHERE user_id = @id
 
 		DELETE FROM LEARNING
-		WHERE user_id = @id
+		WHERE learner_id = @id
 
 		DELETE FROM ANSWERS
-		WHERE user_id = @id
+		WHERE learner_id = @id
 
 		DELETE FROM TEACHES_STUDENTS
 		WHERE learner_id = @id
 
 		DELETE FROM QUIZES_ANSWERED
-		WHERE user_id = @id
+		WHERE learner_id = @id
 
 		DELETE FROM LEARNER
 		WHERE id = @id
