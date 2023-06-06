@@ -39,12 +39,6 @@ CREATE TABLE LEARNING(
 	designation					VARCHAR(40),
 	PRIMARY KEY("user_id", designation));						-- Both foreign keys
 
-CREATE TABLE KNOWS(
-	"user_id"					int,
-	designation					VARCHAR(40),
-	PRIMARY KEY("user_id", designation));						-- Both foreign keys
-
-
 CREATE TABLE DIFICULTY(
 	designation_1				VARCHAR(40),
 	designation_2				VARCHAR(40),
@@ -129,17 +123,6 @@ ALTER TABLE LEARNING
 
 ALTER TABLE LEARNING
 			ADD CONSTRAINT fk_language_learning_id
-			FOREIGN KEY (designation)
-			REFERENCES "LANGUAGE"(designation);
-
--- KNOWS TABLE
-ALTER TABLE KNOWS
-			ADD CONSTRAINT fk_user_knows_id
-			FOREIGN KEY ("user_id")
-			REFERENCES "USER"(id);
-
-ALTER TABLE KNOWS
-			ADD CONSTRAINT fk_language_knows_id
 			FOREIGN KEY (designation)
 			REFERENCES "LANGUAGE"(designation);
 
