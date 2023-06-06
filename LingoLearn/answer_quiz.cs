@@ -86,7 +86,6 @@ namespace LingoLearn
 
             foreach (UserAnswer ua in user_answers)
             {
-                MessageBox.Show("answered " + ua.AnswerID, "Question Score", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 using (SqlCommand cmd = new SqlCommand("setUserAnswer", cn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
