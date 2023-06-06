@@ -32,39 +32,28 @@ namespace LingoLearn
         private void loadStudents()
         {
             SqlConnection cn = startpage.cn;
-            try
+
+            cn.Open();
+            using (SqlCommand cmd = new SqlCommand("getStudents", cn))
             {
-                String query = String.Format("SELECT username, designation " +
-                                                "FROM \"USER\" JOIN TEACHES_STUDENTS ON id = learner_id " +
-                                                "WHERE teacher_id = " + login.id.ToString());
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@teacher_id", SqlDbType.Int).Value = login.id;
 
-                cn.Open();
-                using (SqlCommand cmd = new SqlCommand(query, cn))
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    if (reader.HasRows)
                     {
-                        if (reader.HasRows)
+                        while (reader.Read())
                         {
-                            while (reader.Read())
-                            {
-                                Student s = new Student();
-                                s.name = reader["username"].ToString();
-                                s.language = reader["designation"].ToString();
-
-                                list.Add(s);
-                            }
+                            Student s = new Student();
+                            s.name = String.Format("{0}#{1}", reader["username"].ToString(), reader["id"].ToString());
+                            s.language = Convert.ToString(reader["designation"]);
+                            list.Add(s);
                         }
                     }
                 }
-                cn.Close();
             }
-            finally
-            {
-                if (cn.State != ConnectionState.Closed)
-                {
-                    cn.Close();
-                }
-            }
+            cn.Close();
         }
 
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
@@ -89,6 +78,7 @@ namespace LingoLearn
             utils.loadForm(this, new teacher_page());
 
         }
+
     }
     public class Student
     {

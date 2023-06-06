@@ -296,6 +296,16 @@ AS
 		ORDER BY score DESC
 GO
 
+DROP PROC IF EXISTS getStudents
+USE [LingoLearn]
+GO
+CREATE PROC getStudents (@teacher_id int)
+AS
+	SELECT DISTINCT id, username, designation
+		FROM "USER" join TEACHES_STUDENTS ON "USER".id = TEACHES_STUDENTS.learner_id
+		WHERE teacher_id=@teacher_id
+GO
+
 DROP PROC IF EXISTS getProfessorQuizzes
 USE [LingoLearn]
 GO
@@ -542,5 +552,6 @@ BEGIN
 END
 GO
 
+DROP INDEX IF EXISTS scoreIndex
 CREATE INDEX scoreIndex
 ON ANSWER (score); 
